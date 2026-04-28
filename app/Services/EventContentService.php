@@ -91,6 +91,21 @@ class EventContentService
             ->all();
     }
 
+    public function textSummary(?string $content, int $length = 30): string
+    {
+        $text = collect($this->normalize($content)['blocks'])
+            ->where('type', 'text')
+            ->pluck('text')
+            ->filter()
+            ->implode("\n");
+
+        $text = trim((string) preg_replace('/\s+/u', ' ', $text));
+
+        return $text === ''
+            ? '-'
+            : Str::substr($text, 0, $length) . '...';
+    }
+
     public function renderDisplay(?string $content, EventRecord $record, ?string $context = null): HtmlString
     {
         $files = $this->inlineFilesById($record, $context);

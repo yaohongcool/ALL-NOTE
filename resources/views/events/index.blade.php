@@ -9,6 +9,10 @@
 ])
 
 @section('content')
+    @php
+        $eventContentService = app(\App\Services\EventContentService::class);
+    @endphp
+
     <div class="space-y-6">
         <div class="flex justify-start">
             <a
@@ -30,8 +34,8 @@
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">发生日期</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">标签</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">记录数</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">最后修改</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">可见性</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">内容</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">可见性（后期推出共享功能）</th>
                             <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">操作</th>
                         </tr>
                     </thead>
@@ -99,13 +103,13 @@
                                     </span>
                                 </td>
 
-                                <td data-label="最后修改" class="px-4 py-4 align-middle">
+                                <td data-label="内容" class="px-4 py-4 align-middle">
                                     <span class="text-sm text-slate-600 dark:text-slate-300">
-                                        {{ $event->updated_at?->format('Y-m-d H:i') }}
+                                        {{ $eventContentService->textSummary($event->summaryRecord?->process) }}
                                     </span>
                                 </td>
 
-                                <td data-label="可见性" class="px-4 py-4 align-middle">
+                                <td data-label="可见性（后期推出共享功能）" class="px-4 py-4 align-middle">
                                     <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ $visibilityClass }}">
                                         {{ $event->visibility_label }}
                                     </span>

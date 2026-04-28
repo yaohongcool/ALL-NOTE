@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 
 class Event extends Model
@@ -71,6 +72,11 @@ class Event extends Model
     public function records(): HasMany
     {
         return $this->hasMany(EventRecord::class);
+    }
+
+    public function summaryRecord(): HasOne
+    {
+        return $this->hasOne(EventRecord::class)->latestOfMany('created_at');
     }
 
     public function tags(): BelongsToMany

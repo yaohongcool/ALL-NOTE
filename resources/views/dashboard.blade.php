@@ -5,6 +5,10 @@
 ])
 
 @section('content')
+    @php
+        $eventContentService = app(\App\Services\EventContentService::class);
+    @endphp
+
     <div class="space-y-6">
         <section class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
             <x-stat-card
@@ -202,9 +206,8 @@
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">发生日期</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">标签</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">记录数</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">最后修改</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">可见性</th>
-                            <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">操作</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">内容</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">可见性（后期推出共享功能）</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
@@ -222,7 +225,10 @@
                                     ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300'
                                     : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
                             @endphp
-                            <tr class="transition hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                            <tr
+                                class="cursor-pointer transition hover:bg-slate-50 dark:hover:bg-slate-800/40"
+                                onclick="window.location='{{ route('events.show', $event) }}'"
+                            >
                                 <td data-label="标题" class="px-4 py-4 align-middle">
                                     <a href="{{ route('events.show', $event) }}" class="text-sm font-semibold text-slate-900 transition hover:text-blue-700 dark:text-slate-100 dark:hover:text-blue-400">
                                         {{ $event->title }}
@@ -271,9 +277,9 @@
                                     </span>
                                 </td>
 
-                                <td data-label="最后修改" class="px-4 py-4 align-middle">
+                                <td data-label="内容" class="px-4 py-4 align-middle">
                                     <span class="text-sm text-slate-600 dark:text-slate-300">
-                                        {{ $event->updated_at?->format('Y-m-d H:i') }}
+                                        {{ $eventContentService->textSummary($event->summaryRecord?->process) }}
                                     </span>
                                 </td>
 
@@ -283,38 +289,10 @@
                                     </span>
                                 </td>
 
-                                <td data-label="操作" class="px-4 py-4 align-middle">
-                                    <div class="flex justify-end gap-2">
-                                        <a
-                                            href="{{ route('events.show', $event) }}"
-                                            class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                                        >
-                                            查看
-                                        </a>
-
-                                        <a
-                                            href="{{ route('events.edit', $event) }}"
-                                            class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                                        >
-                                            编辑
-                                        </a>
-
-                                        <form method="POST" action="{{ route('events.destroy', $event) }}" onsubmit="return confirm('确定删除这个事件及其全部处理记录吗？');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button
-                                                type="submit"
-                                                class="rounded-xl border border-red-200 px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950/40"
-                                            >
-                                                删除
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="px-4 py-10 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
+                                <td colspan="8" class="px-4 py-10 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
                                     暂无事件记录。
                                 </td>
                             </tr>

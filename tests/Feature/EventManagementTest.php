@@ -261,7 +261,7 @@ class EventManagementTest extends TestCase
 
         $this->actingAs($user)->get(route('events.index'))
             ->assertOk()
-            ->assertSeeInOrder(['记录数', '最后修改', '可见性', '操作']);
+            ->assertSeeInOrder(['记录数', '内容', '可见性', '操作']);
     }
 
     public function test_management_lists_render_mobile_responsive_table_markup(): void
@@ -323,6 +323,7 @@ class EventManagementTest extends TestCase
         $this->actingAs($user)->get(route('events.index'))
             ->assertOk()
             ->assertSee('data-label="标题"', false)
+            ->assertSee('data-label="内容"', false)
             ->assertSee('data-label="可见性"', false)
             ->assertDontSee('可见性（未实装功能）');
     }
@@ -359,15 +360,15 @@ class EventManagementTest extends TestCase
         $this->actingAs($user)->get(route('dashboard'))
             ->assertOk()
             ->assertSee('事件一览')
-            ->assertSeeInOrder(['标题', '状态', '来源/对象', '发生日期', '标签', '记录数', '最后修改', '可见性', '操作'])
+            ->assertSeeInOrder(['标题', '状态', '来源/对象', '发生日期', '标签', '记录数', '内容', '可见性'])
+            ->assertSee('cursor-pointer', false)
+            ->assertSee('onclick="window.location=\'', false)
             ->assertSee('首页事件 6')
             ->assertSee('来源 6')
             ->assertSee('2026-04-06')
             ->assertSee('首页标签')
+            ->assertSee('首页事件过程...')
             ->assertSee('仅自己可见')
-            ->assertSee('查看')
-            ->assertSee('编辑')
-            ->assertSee('删除')
             ->assertSee('首页事件 5')
             ->assertSee('首页事件 4')
             ->assertSee('首页事件 3')

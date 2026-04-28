@@ -49,7 +49,7 @@
 
         <div>
             <label for="visibility" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
-                可见性 <span class="text-red-500">*</span>
+                可见性（后期推出共享功能） <span class="text-red-500">*</span>
             </label>
             <select
                 id="visibility"

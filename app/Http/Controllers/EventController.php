@@ -28,7 +28,7 @@ class EventController extends Controller
         $user = auth()->user();
 
         $events = $user->events()
-            ->with(['tags'])
+            ->with(['tags', 'summaryRecord'])
             ->withCount('records')
             ->orderByDesc('created_at')
             ->orderByDesc('id')

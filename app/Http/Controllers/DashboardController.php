@@ -17,7 +17,7 @@ class DashboardController extends Controller
             ->get();
 
         $recentEvents = $user->events()
-            ->with('tags')
+            ->with(['tags', 'summaryRecord'])
             ->withCount('records')
             ->latest('created_at')
             ->latest('id')
