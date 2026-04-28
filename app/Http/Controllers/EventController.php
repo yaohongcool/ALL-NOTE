@@ -12,7 +12,6 @@ use App\Services\EventContentService;
 use App\Services\EventFileService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -24,34 +23,19 @@ class EventController extends Controller
     ) {
     }
 
-    public function index(Request $request): View
+    public function index(): View
     {
         $user = auth()->user();
-        $status = trim((string) $request->string('status'));
-        $visibility = trim((string) $request->string('visibility'));
-        $sort = $request->string('sort')->toString() ?: 'created_desc';
 
-        $query = $user->events()
+        $events = $user->events()
             ->with(['tags'])
             ->withCount('records')
-            ->when(in_array($status, Event::STATUSES, true), function ($query) use ($status) {
-                $query->where('status', $status);
-            })
-            ->when(in_array($visibility, Event::VISIBILITIES, true), function ($query) use ($visibility) {
-                $query->where('visibility', $visibility);
-            });
-
-        $query = match ($sort) {
-            'created_asc' => $query->orderBy('created_at')->orderBy('id'),
-            default => $query->orderByDesc('created_at')->orderByDesc('id'),
-        };
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->paginate(10);
 
         return view('events.index', [
-            'events' => $query->paginate(10)->withQueryString(),
-            'statuses' => Event::STATUSES,
-            'status' => $status,
-            'visibility' => $visibility,
-            'sort' => $sort,
+            'events' => $events,
         ]);
     }
 

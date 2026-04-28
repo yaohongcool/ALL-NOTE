@@ -10,71 +10,14 @@
 
 @section('content')
     <div class="space-y-6">
-        <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                <form method="GET" action="{{ route('documents.index') }}" class="grid flex-1 grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-4">
-                    <div>
-                        <select
-                            id="category"
-                            name="category"
-                            onchange="this.form.submit()"
-                            class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
-                        >
-                            <option value="">全部分类</option>
-                            @foreach ($categories as $item)
-                                <option value="{{ $item }}" @selected($category === $item)>{{ $item }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <select
-                            id="status"
-                            name="status"
-                            onchange="this.form.submit()"
-                            class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
-                        >
-                            <option value="">全部状态</option>
-                            @foreach ($statuses as $item)
-                                <option value="{{ $item }}" @selected($status === $item)>{{ $item }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <select
-                            id="sort"
-                            name="sort"
-                            onchange="this.form.submit()"
-                            class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
-                        >
-                            <option value="updated_desc" @selected($sort === 'updated_desc')>最近修改（新到旧）</option>
-                            <option value="updated_asc" @selected($sort === 'updated_asc')>最近修改（旧到新）</option>
-                            <option value="name_asc" @selected($sort === 'name_asc')>姓名（A-Z）</option>
-                            <option value="name_desc" @selected($sort === 'name_desc')>姓名（Z-A）</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-wrap gap-3 items-end">
-                        <a
-                            href="{{ route('documents.index') }}"
-                            class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
-                        >
-                            重置
-                        </a>
-                    </div>
-                </form>
-
-                <div class="flex-shrink-0">
-                    <a
-                        href="{{ route('documents.create') }}"
-                        class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
-                    >
-                        添加证件
-                    </a>
-                </div>
-            </div>
-        </section>
+        <div class="flex justify-start">
+            <a
+                href="{{ route('documents.create') }}"
+                class="inline-flex w-full items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 sm:w-auto"
+            >
+                添加证件
+            </a>
+        </div>
 
         <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div class="responsive-table-wrap overflow-x-auto">

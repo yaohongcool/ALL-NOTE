@@ -10,69 +10,14 @@
 
 @section('content')
     <div class="space-y-6">
-        <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                <form method="GET" action="{{ route('events.index') }}" class="grid flex-1 grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-4">
-                    <div>
-                        <select
-                            id="status"
-                            name="status"
-                            onchange="this.form.submit()"
-                            class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
-                        >
-                            <option value="">全部状态</option>
-                            @foreach ($statuses as $item)
-                                <option value="{{ $item }}" @selected($status === $item)>{{ $item }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    
-
-                    <div>
-                        <select
-                            id="sort"
-                            name="sort"
-                            onchange="this.form.submit()"
-                            class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
-                        >
-                            <option value="created_desc" @selected($sort === 'created_desc')>创建时间（新到旧）</option>
-                            <option value="created_asc" @selected($sort === 'created_asc')>创建时间（旧到新）</option>
-                        </select>
-                    </div>
-                    <div>
-                        <select
-                            id="visibility"
-                            name="visibility"
-                            onchange="this.form.submit()"
-                            class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
-                        >
-                            <option value="">全部可见性</option>
-                            <option value="private" @selected($visibility === 'private')>仅自己可见</option>
-                            <option value="public" @selected($visibility === 'public')>公开</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-wrap gap-3 items-end">
-                        <a
-                            href="{{ route('events.index') }}"
-                            class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
-                        >
-                            重置
-                        </a>
-                    </div>
-                </form>
-
-                <div class="flex-shrink-0">
-                    <a
-                        href="{{ route('events.create') }}"
-                        class="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
-                    >
-                        添加事件
-                    </a>
-                </div>
-            </div>
-        </section>
+        <div class="flex justify-start">
+            <a
+                href="{{ route('events.create') }}"
+                class="inline-flex w-full items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 sm:w-auto"
+            >
+                添加事件
+            </a>
+        </div>
 
         <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div class="responsive-table-wrap overflow-x-auto">

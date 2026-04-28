@@ -178,40 +178,39 @@ class EventManagementTest extends TestCase
             ->assertDontSee('选择结果图片');
     }
 
-    public function test_list_filters_auto_submit_and_only_keep_reset_button(): void
+    public function test_list_pages_hide_filters_and_keep_responsive_create_button(): void
     {
         $user = User::create([
             'username' => 'list-user',
             'password' => Hash::make('Password@123'),
         ]);
 
-        $this->actingAs($user)->get(route('events.index'))
-            ->assertOk()
-            ->assertSee('lg:flex-row lg:items-end lg:justify-between', false)
-            ->assertSee('md:grid-cols-3 xl:grid-cols-4', false)
-            ->assertSee('name="status"', false)
-            ->assertSee('name="visibility"', false)
-            ->assertSee('创建时间（新到旧）')
-            ->assertSee('onchange="this.form.submit()"', false)
-            ->assertSee('重置')
-            ->assertSee('添加事件')
-            ->assertDontSee('sm:grid-cols-2 xl:grid-cols-3', false)
-            ->assertDontSee('查询')
-            ->assertDontSee('name="keyword"', false)
-            ->assertDontSee('name="tag_id"', false)
-            ->assertDontSee('name="date_from"', false)
-            ->assertDontSee('name="date_to"', false)
-            ->assertDontSee('name="missing_date"', false)
-            ->assertSeeInOrder(['记录数', '最后修改', '可见性', '操作']);
+        $pages = [
+            route('passwords.index') => '添加密码',
+            route('assets.index') => '添加资产',
+            route('documents.index') => '添加证件',
+            route('events.index') => '添加事件',
+        ];
 
-        foreach ([route('passwords.index'), route('assets.index'), route('documents.index')] as $route) {
+        foreach ($pages as $route => $createLabel) {
             $this->actingAs($user)->get($route)
                 ->assertOk()
-                ->assertSee('onchange="this.form.submit()"', false)
-                ->assertSee('重置')
+                ->assertSee($createLabel)
+                ->assertSee('w-full items-center justify-center', false)
+                ->assertSee('sm:w-auto', false)
+                ->assertDontSee('onchange="this.form.submit()"', false)
+                ->assertDontSee('重置')
                 ->assertDontSee('查询')
+                ->assertDontSee('name="category"', false)
+                ->assertDontSee('name="status"', false)
+                ->assertDontSee('name="sort"', false)
+                ->assertDontSee('name="visibility"', false)
                 ->assertDontSee('应用排序');
         }
+
+        $this->actingAs($user)->get(route('events.index'))
+            ->assertOk()
+            ->assertSeeInOrder(['记录数', '最后修改', '可见性', '操作']);
     }
 
     public function test_management_lists_render_mobile_responsive_table_markup(): void

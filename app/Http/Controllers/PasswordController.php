@@ -9,7 +9,6 @@ use App\Services\PasswordCipherService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class PasswordController extends Controller
 {
@@ -18,25 +17,17 @@ class PasswordController extends Controller
     ) {
     }
 
-    public function index(Request $request): View
+    public function index(): View
     {
         $user = auth()->user();
-        $sort = $request->string('sort')->toString() ?: 'updated_desc';
 
-        $query = $user->passwords();
-
-        $query = match ($sort) {
-            'name_asc' => $query->orderBy('name')->orderByDesc('id'),
-            'name_desc' => $query->orderByDesc('name')->orderByDesc('id'),
-            'updated_asc' => $query->orderBy('updated_at')->orderBy('id'),
-            default => $query->orderByDesc('updated_at')->orderByDesc('id'),
-        };
-
-        $passwords = $query->paginate(10)->withQueryString();
+        $passwords = $user->passwords()
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
+            ->paginate(10);
 
         return view('passwords.index', [
             'passwords' => $passwords,
-            'sort' => $sort,
         ]);
     }
 

@@ -8,7 +8,6 @@ use App\Models\Document;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class DocumentController extends Controller
 {
@@ -19,40 +18,17 @@ class DocumentController extends Controller
         '其它',
     ];
 
-    public function index(Request $request): View
+    public function index(): View
     {
         $user = auth()->user();
-        $category = trim((string) $request->string('category'));
-        $status = trim((string) $request->string('status'));
-        $sort = $request->string('sort')->toString() ?: 'updated_desc';
 
-        $query = $user->documents()
-            ->when($category !== '', function ($query) use ($category) {
-                $query->where('category', $category);
-            });
-
-        $query = match ($sort) {
-            'name_asc' => $query->orderBy('name')->orderByDesc('id'),
-            'name_desc' => $query->orderByDesc('name')->orderByDesc('id'),
-            'updated_asc' => $query->orderBy('updated_at')->orderBy('id'),
-            default => $query->orderByDesc('updated_at')->orderByDesc('id'),
-        };
-
-        $documents = $query->paginate(10)->withQueryString();
-
-        if ($status !== '') {
-            $documents->setCollection(
-                $documents->getCollection()->filter(fn (Document $document) => $document->computed_status === $status)->values()
-            );
-        }
+        $documents = $user->documents()
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
+            ->paginate(10);
 
         return view('documents.index', [
             'documents' => $documents,
-            'category' => $category,
-            'status' => $status,
-            'sort' => $sort,
-            'categories' => $this->categories,
-            'statuses' => ['正常', '即将到期', '已过期'],
         ]);
     }
 
