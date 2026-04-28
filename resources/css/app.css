@@ -1,0 +1,142 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+    color-scheme: light;
+}
+
+.dark {
+    color-scheme: dark;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+body {
+    font-family: "Inter", "Noto Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+
+@media (max-width: 767px) {
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .responsive-table-wrap {
+        overflow-x: visible;
+    }
+
+    .responsive-table {
+        width: 100%;
+        min-width: 0 !important;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .responsive-table thead {
+        display: none;
+    }
+
+    .responsive-table tbody {
+        display: grid;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .responsive-table tr {
+        display: block;
+        overflow: hidden;
+        border: 1px solid rgb(226 232 240);
+        border-radius: 1rem;
+        background: rgb(255 255 255);
+    }
+
+    .dark .responsive-table tr {
+        border-color: rgb(30 41 59);
+        background: rgb(15 23 42);
+    }
+
+    .responsive-table td {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        border: 0;
+        padding: 0.75rem 1rem;
+        text-align: right;
+    }
+
+    .responsive-table td + td {
+        border-top: 1px solid rgb(241 245 249);
+    }
+
+    .dark .responsive-table td + td {
+        border-top-color: rgb(30 41 59);
+    }
+
+    .responsive-table td::before {
+        content: attr(data-label);
+        flex: 0 0 5.5rem;
+        text-align: left;
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 1.25rem;
+        color: rgb(100 116 139);
+    }
+
+    .dark .responsive-table td::before {
+        color: rgb(148 163 184);
+    }
+
+    .responsive-table td > * {
+        min-width: 0;
+    }
+
+    .responsive-table td :where(p, span, a) {
+        overflow-wrap: anywhere;
+    }
+
+    .responsive-table td > .flex {
+        flex-wrap: wrap;
+    }
+
+    .responsive-table td[data-label="名称"],
+    .responsive-table td[data-label="标题"],
+    .responsive-table td[data-label="姓名"],
+    .responsive-table td[data-label="标签"],
+    .responsive-table td[data-label="操作"] {
+        display: block;
+        text-align: left;
+    }
+
+    .responsive-table td[data-label="名称"]::before,
+    .responsive-table td[data-label="标题"]::before,
+    .responsive-table td[data-label="姓名"]::before,
+    .responsive-table td[data-label="标签"]::before,
+    .responsive-table td[data-label="操作"]::before {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .responsive-table td[data-label="操作"] > div {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .responsive-table td[colspan] {
+        display: block;
+        text-align: center;
+    }
+
+    .responsive-table td[colspan]::before {
+        content: none;
+    }
+}
