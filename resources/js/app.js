@@ -206,12 +206,124 @@ window.eventRecordForm = function () {
                 .filter(Boolean);
             const files = clipboardFiles.length > 0 ? clipboardFiles : itemFiles;
 
-            if (files.length === 0) {
+            if (files.length > 0) {
+                event.preventDefault();
+                this.addInlineFiles(context, files);
+                return;
+            }
+
+            const text = this.plainTextFromClipboard(clipboard);
+
+            if (text === '') {
+                if (Array.from(clipboard?.types || []).includes('text/html')) {
+                    event.preventDefault();
+                }
+
                 return;
             }
 
             event.preventDefault();
-            this.addInlineFiles(context, files);
+            this.insertPlainTextAtSelection(context, text);
+            this.refreshContent(context);
+        },
+
+        plainTextFromClipboard(clipboard) {
+            if (!clipboard) {
+                return '';
+            }
+
+            const plainText = clipboard.getData('text/plain');
+            if (plainText !== '') {
+                return plainText;
+            }
+
+            const html = clipboard.getData('text/html');
+            if (html === '') {
+                return '';
+            }
+
+            const documentFromHtml = new DOMParser().parseFromString(html, 'text/html');
+
+            return documentFromHtml.body?.innerText || documentFromHtml.body?.textContent || '';
+        },
+
+        insertPlainTextAtSelection(context, text) {
+            const editor = this.editorFor(context);
+
+            if (!editor) {
+                return;
+            }
+
+            editor.focus();
+            this.restoreSelection(context);
+
+            try {
+                if (typeof document.execCommand === 'function' && document.execCommand('insertText', false, text)) {
+                    this.rememberSelection(context);
+                    return;
+                }
+            } catch (error) {
+                // Fall through to the Range-based insertion for browsers that disable execCommand.
+            }
+
+            this.insertTextWithRange(editor, text);
+            this.rememberSelection(context);
+        },
+
+        restoreSelection(context) {
+            const editor = this.editorFor(context);
+            const selection = window.getSelection();
+            const savedRange = this.savedRanges[context];
+
+            if (!editor || !selection || !savedRange || !editor.contains(savedRange.commonAncestorContainer)) {
+                return;
+            }
+
+            selection.removeAllRanges();
+            selection.addRange(savedRange);
+        },
+
+        insertTextWithRange(editor, text) {
+            const selection = window.getSelection();
+
+            if (!selection || selection.rangeCount === 0) {
+                editor.append(document.createTextNode(text));
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            if (!editor.contains(range.commonAncestorContainer)) {
+                editor.append(document.createTextNode(text));
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+
+            lines.forEach((line, index) => {
+                if (index > 0) {
+                    fragment.append(document.createElement('br'));
+                }
+
+                if (line !== '') {
+                    fragment.append(document.createTextNode(line));
+                }
+            });
+
+            const lastNode = fragment.lastChild;
+
+            range.deleteContents();
+            range.insertNode(fragment);
+
+            if (!lastNode) {
+                return;
+            }
+
+            const caretRange = document.createRange();
+            caretRange.setStartAfter(lastNode);
+            caretRange.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(caretRange);
         },
 
         insertSelectedImages(context) {

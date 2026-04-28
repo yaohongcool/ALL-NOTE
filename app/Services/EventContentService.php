@@ -130,7 +130,11 @@ HTML;
                     return '';
                 }
 
-                return '<p class="my-3 whitespace-pre-wrap">' . e($text) . '</p>';
+                $html = trim($this->renderMarkdownText($text));
+
+                return $html === ''
+                    ? ''
+                    : '<div class="event-markdown">' . $html . '</div>';
             })
             ->filter()
             ->implode("\n");
@@ -201,6 +205,15 @@ HTML;
                 ],
             ],
         ];
+    }
+
+    protected function renderMarkdownText(string $text): string
+    {
+        return Str::markdown($text, [
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+            'max_nesting_level' => 100,
+        ]);
     }
 
     protected function normalizeBlock(mixed $block): ?array

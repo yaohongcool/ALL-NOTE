@@ -137,6 +137,57 @@ class EventManagementTest extends TestCase
             ->assertDontSee('内部标签');
     }
 
+    public function test_event_record_display_renders_markdown_safely(): void
+    {
+        $user = User::create([
+            'username' => 'markdown-user',
+            'password' => Hash::make('Password@123'),
+        ]);
+
+        $event = $user->events()->create([
+            'title' => 'Markdown 记录',
+            'status' => Event::STATUS_PROCESSED,
+            'visibility' => Event::VISIBILITY_PRIVATE,
+        ]);
+
+        $event->records()->create([
+            'user_id' => $user->id,
+            'process' => json_encode([
+                'type' => 'event_record_content',
+                'version' => 1,
+                'blocks' => [
+                    [
+                        'type' => 'text',
+                        'text' => implode("\n", [
+                            '## 排查结果',
+                            '',
+                            '- **登录失败**',
+                            '- `ssh`',
+                            '',
+                            '| 项目 | 值 |',
+                            '| --- | --- |',
+                            '| 状态 | 正常 |',
+                            '',
+                            '<script>alert("x")</script>',
+                            '[危险链接](javascript:alert(1))',
+                        ]),
+                    ],
+                ],
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'result' => null,
+        ]);
+
+        $this->actingAs($user)->get(route('events.show', $event))
+            ->assertOk()
+            ->assertSee('<h2>排查结果</h2>', false)
+            ->assertSee('<strong>登录失败</strong>', false)
+            ->assertSee('<code>ssh</code>', false)
+            ->assertSee('<table>', false)
+            ->assertDontSee('## 排查结果')
+            ->assertDontSee('<script', false)
+            ->assertDontSee('href="javascript:alert(1)"', false);
+    }
+
     public function test_event_forms_only_show_event_tags_and_support_paste_handlers(): void
     {
         $user = User::create([

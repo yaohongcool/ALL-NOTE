@@ -98,7 +98,7 @@ class EventController extends Controller
 
         $event->load([
             'user',
-            'records' => fn ($query) => $query->oldest('created_at')->oldest('id'),
+            'records' => fn ($query) => $query->latest('created_at')->latest('id'),
             'records.user',
             'records.files' => fn ($query) => $query->oldest('created_at')->oldest('id'),
         ]);
