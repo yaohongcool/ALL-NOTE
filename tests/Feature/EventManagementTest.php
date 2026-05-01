@@ -244,6 +244,11 @@ class EventManagementTest extends TestCase
             'username' => 'list-user',
             'password' => Hash::make('Password@123'),
         ]);
+        $event = $user->events()->create([
+            'title' => '列表按钮事件',
+            'status' => Event::STATUS_PROCESSED,
+            'visibility' => Event::VISIBILITY_PRIVATE,
+        ]);
 
         $pages = [
             route('passwords.index') => '添加密码',
@@ -270,7 +275,11 @@ class EventManagementTest extends TestCase
 
         $this->actingAs($user)->get(route('events.index'))
             ->assertOk()
-            ->assertSeeInOrder(['记录数', '内容', '可见性', '操作']);
+            ->assertSeeInOrder(['记录数', '内容', '可见性', '操作'])
+            ->assertSee('编辑')
+            ->assertDontSee('查看')
+            ->assertSee(route('events.show', $event), false)
+            ->assertDontSee(route('events.edit', $event), false);
     }
 
     public function test_management_lists_render_mobile_responsive_table_markup(): void

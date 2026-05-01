@@ -121,13 +121,6 @@
                                             href="{{ route('events.show', $event) }}"
                                             class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
                                         >
-                                            查看
-                                        </a>
-
-                                        <a
-                                            href="{{ route('events.edit', $event) }}"
-                                            class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                                        >
                                             编辑
                                         </a>
 
