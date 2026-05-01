@@ -29,7 +29,6 @@
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">密码</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">绑定手机/邮箱</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">备注</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">最后修改</th>
                             <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">操作</th>
                         </tr>
                     </thead>
@@ -126,12 +125,6 @@
                                     </span>
                                 </td>
 
-                                <td data-label="最后修改" class="px-4 py-4 align-middle">
-                                    <span class="text-sm text-slate-600 dark:text-slate-300">
-                                        {{ $password->updated_at?->format('Y-m-d H:i') }}
-                                    </span>
-                                </td>
-
                                 <td data-label="操作" class="px-4 py-4 align-middle">
                                     <div class="flex justify-end gap-2">
                                         <a
@@ -156,7 +149,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-4 py-10 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
+                                <td colspan="6" class="px-4 py-10 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
                                     暂无密码记录，点击“添加密码”开始创建。
                                 </td>
                             </tr>
