@@ -2,7 +2,7 @@
     <div class="flex h-16 items-center gap-3 border-slate-200 px-6 dark:border-slate-800">
        
         <div class="flex h-10 w-10 items-center justify-center rounded-full shadow-sm">
-            <img src="{{ asset('max_favicon.png') }}" class="h-full w-full object-cover">
+            <img src="{{ asset('logo.png') }}" class="h-full w-full object-cover">
         </div>
         <div>
             <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">全录笔记</p>

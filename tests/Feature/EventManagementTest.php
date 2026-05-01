@@ -385,6 +385,33 @@ class EventManagementTest extends TestCase
             ->assertDontSee('首页事件 1');
     }
 
+    public function test_dashboard_expiry_reminders_show_first_five_due_items(): void
+    {
+        $user = User::create([
+            'username' => 'dashboard-reminder-user',
+            'password' => Hash::make('Password@123'),
+        ]);
+
+        foreach (range(1, 6) as $index) {
+            $user->documents()->create([
+                'name' => '证件提醒 ' . $index,
+                'category' => '护照',
+                'status' => '正常',
+                'due_date' => '2026-05-' . str_pad((string) $index, 2, '0', STR_PAD_LEFT),
+            ]);
+        }
+
+        $this->actingAs($user)->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('到期提醒')
+            ->assertSee('证件提醒 1')
+            ->assertSee('证件提醒 2')
+            ->assertSee('证件提醒 3')
+            ->assertSee('证件提醒 4')
+            ->assertSee('证件提醒 5')
+            ->assertDontSee('证件提醒 6');
+    }
+
     public function test_user_can_quick_delete_own_event_tag(): void
     {
         $owner = User::create([

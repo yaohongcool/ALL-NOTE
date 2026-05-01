@@ -59,6 +59,7 @@ class DashboardController extends Controller
         $reminders = $assetReminders
             ->concat($documentReminders)
             ->sortBy(fn ($item) => optional($item['due_date'])->timestamp ?? PHP_INT_MAX)
+            ->take(5)
             ->values();
 
         return view('dashboard', [

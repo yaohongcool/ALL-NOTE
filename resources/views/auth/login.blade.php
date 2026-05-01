@@ -13,7 +13,7 @@
             <div class="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <div class="text-center">
                     <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full shadow-sm">
-                        <img src="./max_favicon.png"  class="w-full h-full object-cover">
+                        <img src="{{ asset('logo.png') }}"  class="w-full h-full object-cover">
                     </div>
                      <h1 class="mt-5 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
                         登录全录笔记
