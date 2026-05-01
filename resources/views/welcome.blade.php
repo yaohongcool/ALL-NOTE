@@ -14,7 +14,7 @@
             <div class="w-full max-w-3xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-12">
                 <div class="mx-auto max-w-2xl text-center">
                     <div class="mx-auto flex h-18 w-18 items-center justify-center rounded-full">
-                        <img src="./max_favicon.png"  class="w-full h-full object-cover">
+                        <img src="./logo.png"  class="w-full h-full object-cover">
                     </div>
 
                     <h1 class="mt-6 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-4xl">
