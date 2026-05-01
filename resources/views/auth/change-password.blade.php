@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>更改密码 - 全录笔记</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

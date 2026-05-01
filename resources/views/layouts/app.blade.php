@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? '全录笔记' }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
