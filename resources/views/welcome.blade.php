@@ -46,17 +46,17 @@
                     <div class="mt-10 grid grid-cols-1 gap-4 text-left md:grid-cols-3">
                         <div class="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/60">
                             <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">信息管理</p>
-                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">各类账密存储、一键复制<br>资产和证件有效时间记录及到期提醒</p>
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">各类账密存储、一键复制。<br>资产和证件有效时间记录及到期提醒。/p>
                         </div>
 
                         <div class="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/60">
                             <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">事件记录</p>
-                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">图文记录事件处理过程<br>积累知识库</p>
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">图文记录事件处理过程。<br>积累知识库。</p>
                         </div>
 
                         <div class="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/60">
                             <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">加密存储</p>
-                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">密码进行 AES-256 加密<br>数据用户隔离</p>
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">密码使用AES-256加密。<br>数据用户隔离。</p>
                         </div>
                     </div>
                 </div>
