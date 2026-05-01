@@ -136,8 +136,8 @@ class AssetController extends Controller
             return '正常';
         }
 
-        $today = Carbon::today();
-        $due = Carbon::parse($dueDate)->startOfDay();
+        $today = Carbon::today('Asia/Shanghai');
+        $due = Carbon::parse($dueDate, 'Asia/Shanghai')->startOfDay();
         $days = $today->diffInDays($due, false);
 
         if ($days < 0) {

@@ -27,6 +27,7 @@
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">姓名</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">分类</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">状态</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">距离到期</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">到期日期</th>
                             <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">操作</th>
                         </tr>
@@ -63,6 +64,12 @@
                                     </span>
                                 </td>
 
+                                <td data-label="距离到期" class="px-4 py-4 align-middle">
+                                    <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ $statusClass }}">
+                                        {{ $document->days_until_due_label }}
+                                    </span>
+                                </td>
+
                                 <td data-label="到期日期" class="px-4 py-4 align-middle">
                                     <span class="text-sm text-slate-600 dark:text-slate-300">
                                         {{ $document->due_date?->format('Y-m-d') ?: '-' }}
@@ -93,7 +100,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-4 py-10 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
+                                <td colspan="6" class="px-4 py-10 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
                                     暂无证件记录，点击“添加证件”开始创建。
                                 </td>
                             </tr>

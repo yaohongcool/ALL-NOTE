@@ -123,6 +123,9 @@
                                 <th class="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                                     状态
                                 </th>
+                                <th class="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                    距离到期
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
@@ -166,10 +169,16 @@
                                             {{ $item['status'] }}
                                         </span>
                                     </td>
+
+                                    <td data-label="距离到期" class="px-5 py-4 align-middle">
+                                        <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ $statusClass }}">
+                                            {{ $item['days_until_due_label'] }}
+                                        </span>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="px-5 py-12 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
+                                    <td colspan="4" class="px-5 py-12 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
                                         暂无可展示内容。
                                     </td>
                                 </tr>

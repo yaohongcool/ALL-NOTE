@@ -34,6 +34,7 @@ class DashboardController extends Controller
                     'title' => $asset->name,
                     'category' => $asset->category,
                     'status' => $asset->computed_status,
+                    'days_until_due_label' => $asset->days_until_due_label,
                     'due_date' => $asset->due_date,
                     'note' => $asset->note,
                 ];
@@ -49,6 +50,7 @@ class DashboardController extends Controller
                     'title' => $document->name,
                     'category' => $document->category,
                     'status' => $document->computed_status,
+                    'days_until_due_label' => $document->days_until_due_label,
                     'due_date' => $document->due_date,
                     'note' => $document->note,
                 ];

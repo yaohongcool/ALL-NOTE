@@ -22,6 +22,8 @@ class Document extends Model
 
     protected $appends = [
         'computed_status',
+        'days_until_due',
+        'days_until_due_label',
     ];
 
     protected function casts(): array
@@ -38,16 +40,11 @@ class Document extends Model
 
     public function getComputedStatusAttribute(): string
     {
-        if (! $this->due_date) {
+        $days = $this->days_until_due;
+
+        if ($days === null) {
             return '正常';
         }
-
-        $today = Carbon::today();
-        $dueDate = $this->due_date instanceof Carbon
-            ? $this->due_date->copy()->startOfDay()
-            : Carbon::parse($this->due_date)->startOfDay();
-
-        $days = $today->diffInDays($dueDate, false);
 
         if ($days < 0) {
             return '已过期';
@@ -58,5 +55,22 @@ class Document extends Model
         }
 
         return '正常';
+    }
+
+    public function getDaysUntilDueAttribute(): ?int
+    {
+        if (! $this->due_date) {
+            return null;
+        }
+
+        $today = Carbon::today('Asia/Shanghai');
+        $dueDate = Carbon::parse($this->due_date->format('Y-m-d'), 'Asia/Shanghai')->startOfDay();
+
+        return (int) $today->diffInDays($dueDate, false);
+    }
+
+    public function getDaysUntilDueLabelAttribute(): string
+    {
+        return $this->days_until_due === null ? '-' : $this->days_until_due . '天';
     }
 }
