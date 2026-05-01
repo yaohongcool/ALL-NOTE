@@ -83,6 +83,11 @@
                     @endforeach
                 </div>
             @endif
+
+            <div class="mt-5 rounded-2xl bg-slate-50 p-4 dark:bg-slate-950/60">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">问题描述</h3>
+                <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-800 dark:text-slate-100">{{ $event->description ?: '-' }}</p>
+            </div>
         </section>
 
         <section class="space-y-4">

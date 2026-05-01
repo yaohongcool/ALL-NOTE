@@ -63,6 +63,7 @@ class EventController extends Controller
         $event = DB::transaction(function () use ($data, $user, $request) {
             $event = $user->events()->create([
                 'title' => $data['title'],
+                'description' => ($data['description'] ?? null) ?: null,
                 'status' => $data['status'],
                 'subject' => $data['subject'] ?: null,
                 'occurred_on' => $data['occurred_on'] ?: null,
@@ -136,6 +137,7 @@ class EventController extends Controller
         DB::transaction(function () use ($event, $data, $user) {
             $event->update([
                 'title' => $data['title'],
+                'description' => ($data['description'] ?? null) ?: null,
                 'status' => $data['status'],
                 'subject' => $data['subject'] ?: null,
                 'occurred_on' => $data['occurred_on'] ?: null,

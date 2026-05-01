@@ -45,6 +45,7 @@ class EventManagementTest extends TestCase
         $response = $this->actingAs($user)->withSession(['_token' => 'test-token'])->post(route('events.store'), [
             '_token' => 'test-token',
             'title' => '服务器登录异常处理',
+            'description' => 'SSH 登录出现异常失败，影响生产服务器维护。',
             'status' => Event::STATUS_PROCESSED,
             'subject' => '生产服务器',
             'occurred_on' => null,
@@ -71,6 +72,7 @@ class EventManagementTest extends TestCase
         $this->assertDatabaseHas('events', [
             'user_id' => $user->id,
             'title' => '服务器登录异常处理',
+            'description' => 'SSH 登录出现异常失败，影响生产服务器维护。',
             'status' => Event::STATUS_PROCESSED,
             'subject' => '生产服务器',
             'visibility' => Event::VISIBILITY_PRIVATE,
@@ -97,6 +99,8 @@ class EventManagementTest extends TestCase
 
         $this->actingAs($user)->get(route('events.show', $event))
             ->assertOk()
+            ->assertSee('问题描述')
+            ->assertSee('SSH 登录出现异常失败，影响生产服务器维护。')
             ->assertSee('<img', false)
             ->assertDontSee('process.jpg')
             ->assertSee('report.pdf');
@@ -206,6 +210,7 @@ class EventManagementTest extends TestCase
         $this->actingAs($user)->get(route('events.create'))
             ->assertOk()
             ->assertSee('事件标签')
+            ->assertSee('问题描述')
             ->assertSee('可删除标签')
             ->assertSee('event-tags\/' . $tag->id, false)
             ->assertSee('deleteEventTag', false)
@@ -217,6 +222,10 @@ class EventManagementTest extends TestCase
             ->assertSee("handlePaste(\$event, 'result')", false)
             ->assertDontSee('选择过程图片')
             ->assertDontSee('选择结果图片');
+
+        $this->actingAs($user)->get(route('events.edit', $event))
+            ->assertOk()
+            ->assertSee('问题描述');
 
         $this->actingAs($user)->get(route('event-records.create', $event))
             ->assertOk()

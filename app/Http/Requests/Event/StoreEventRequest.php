@@ -17,6 +17,7 @@ class StoreEventRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:150'],
+            'description' => ['nullable', 'string'],
             'status' => ['required', 'string', Rule::in(Event::STATUSES)],
             'subject' => ['nullable', 'string', 'max:255'],
             'occurred_on' => ['nullable', 'date'],
@@ -42,6 +43,7 @@ class StoreEventRequest extends FormRequest
         return [
             'title.required' => '请输入事件名称。',
             'title.max' => '事件名称不能超过 150 个字符。',
+            'description.string' => '问题描述格式不正确。',
             'status.required' => '请选择事件状态。',
             'status.in' => '事件状态无效。',
             'subject.max' => '来源/对象不能超过 255 个字符。',

@@ -29,6 +29,22 @@
             @enderror
         </div>
 
+        <div class="md:col-span-2">
+            <label for="description" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
+                问题描述
+            </label>
+            <textarea
+                id="description"
+                name="description"
+                rows="4"
+                class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
+                placeholder="描述问题现象、影响范围或已知背景"
+            >{{ old('description', $eventModel->description) }}</textarea>
+            @error('description')
+                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+            @enderror
+        </div>
+
         <div>
             <label for="status" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
                 状态 <span class="text-red-500">*</span>
