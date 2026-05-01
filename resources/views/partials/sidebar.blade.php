@@ -1,7 +1,7 @@
 <div class="flex h-full flex-col">
     <div class="flex h-16 items-center gap-3 border-slate-200 px-6 dark:border-slate-800">
        
-        <div class="flex h-10 w-10 items-center justify-center rounded-full shadow-sm">
+        <div class="flex h-10 w-10 items-center justify-center">
             <img src="{{ asset('logo.png') }}" class="h-full w-full object-cover">
         </div>
         <div>
