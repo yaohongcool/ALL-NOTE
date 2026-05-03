@@ -115,7 +115,7 @@
                         <thead class="bg-slate-50 dark:bg-slate-800/60">
                             <tr>
                                 <th class="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                                    名称 / 姓名
+                                    名称
                                 </th>
                                 <th class="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                                     分类
@@ -147,7 +147,7 @@
                                     class="cursor-pointer transition hover:bg-slate-50 dark:hover:bg-slate-800/40"
                                     onclick="window.location='{{ $targetUrl }}'"
                                 >
-                                    <td data-label="名称 / 姓名" class="px-5 py-4 align-middle">
+                                    <td data-label="名称" class="px-5 py-4 align-middle">
                                         <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">
                                             {{ $item['title'] }}
                                         </p>

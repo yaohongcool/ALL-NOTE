@@ -7,7 +7,7 @@
     <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
         <div>
             <label for="name" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
-                姓名 <span class="text-red-500">*</span>
+                名称 <span class="text-red-500">*</span>
             </label>
             <input
                 id="name"

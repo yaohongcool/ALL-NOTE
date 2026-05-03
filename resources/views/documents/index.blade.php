@@ -24,7 +24,7 @@
                 <table class="responsive-table min-w-full divide-y divide-slate-200 dark:divide-slate-800">
                     <thead class="bg-slate-50 dark:bg-slate-800/60">
                         <tr>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">姓名</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">名称</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">分类</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">状态</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">到期日期</th>
@@ -35,7 +35,7 @@
                     <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                         @forelse ($documents as $document)
                             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                                <td data-label="姓名" class="px-4 py-4 align-middle">
+                                <td data-label="名称" class="px-4 py-4 align-middle">
                                     <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">
                                         {{ $document->name }}
                                     </p>
