@@ -28,9 +28,9 @@
             />
 
             <x-stat-card
-                title="证照总数"
+                title="期限备忘总数"
                 :value="$stats['documents_count']"
-                hint="当前登录用户的证照记录总数"
+                hint="当前登录用户的期限备忘记录总数"
                 :createUrl="route('documents.create')"
                 :manageUrl="route('documents.index')"
             />
@@ -104,9 +104,9 @@
 
             <div class="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <div class="border-b border-slate-200 px-6 py-5 dark:border-slate-800">
-                    <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">到期提醒</h2>
+                    <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">期限备忘</h2>
                     <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                        最先到期的资产与或证件
+                        最先到期的资产与期限备忘
                     </p>
                 </div>
 

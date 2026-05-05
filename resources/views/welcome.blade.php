@@ -25,7 +25,7 @@
                         ALL NOTE
                     </h1>
                     <p class="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
-                        一个简洁、安全，面向个人的存储账号密码、IT资产、证件有效期、事件记录的统一管理工具
+                        一个简洁、安全，面向个人的存储账号密码、IT资产、期限备忘、事件记录的统一管理工具
                     </p>
 
                     <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -47,7 +47,7 @@
                     <div class="mt-10 grid grid-cols-1 gap-4 text-left md:grid-cols-3">
                         <div class="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/60">
                             <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">信息管理</p>
-                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">各类账密存储、一键复制。<br>资产和证件有效时间记录及到期提醒。</p>
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">各类账密存储、一键复制。<br>资产和期限备忘时间记录。</p>
                         </div>
 
                         <div class="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/60">

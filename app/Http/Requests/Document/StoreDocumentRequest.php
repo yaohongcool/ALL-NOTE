@@ -16,7 +16,7 @@ class StoreDocumentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:100'],
-            'category' => ['required', 'string', Rule::in(['身份证', '驾驶证', '护照', '其它'])],
+            'category' => ['required', 'string', Rule::in(['证件', '会员', '物品'])],
             'due_date' => ['nullable', 'date'],
             'note' => ['nullable', 'string'],
         ];
@@ -25,9 +25,9 @@ class StoreDocumentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => '请输入姓名。',
+            'name.required' => '请输入名称。',
             'category.required' => '请选择分类。',
-            'category.in' => '证照分类无效。',
+            'category.in' => '期限备忘分类无效。',
             'due_date.date' => '到期日期格式不正确。',
         ];
     }

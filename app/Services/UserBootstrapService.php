@@ -57,8 +57,8 @@ class UserBootstrapService
             : Carbon::parse($user->created_at);
 
         $user->documents()->create([
-            'name' => '张三（演示数据）',
-            'category' => '身份证',
+            'name' => '会员卡（演示数据）',
+            'category' => '会员',
             'status' => '即将过期',
             'due_date' => $createdAt->addDays(30)->toDateString(),
             'note' => '演示数据',

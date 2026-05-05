@@ -12,10 +12,9 @@ use Illuminate\Http\RedirectResponse;
 class DocumentController extends Controller
 {
     protected array $categories = [
-        '身份证',
-        '驾驶证',
-        '护照',
-        '其它',
+        '证件',
+        '会员',
+        '物品',
     ];
 
     public function index(): View
@@ -36,7 +35,7 @@ class DocumentController extends Controller
     {
         return view('documents.create', [
             'document' => new Document([
-                'category' => '身份证',
+                'category' => '证件',
             ]),
             'categories' => $this->categories,
         ]);
@@ -55,7 +54,7 @@ class DocumentController extends Controller
         ]);
 
         return redirect()->route('documents.index')
-            ->with('success', '证照记录已创建。');
+            ->with('success', '期限备忘已创建。');
     }
 
     public function edit(Document $document): View
@@ -83,7 +82,7 @@ class DocumentController extends Controller
         ]);
 
         return redirect()->route('documents.index')
-            ->with('success', '证照记录已更新。');
+            ->with('success', '期限备忘已更新。');
     }
 
     public function destroy(Document $document): RedirectResponse
@@ -93,7 +92,7 @@ class DocumentController extends Controller
         $document->delete();
 
         return redirect()->route('documents.index')
-            ->with('success', '证照记录已删除。');
+            ->with('success', '期限备忘已删除。');
     }
 
     protected function authorizeDocument(Document $document): void

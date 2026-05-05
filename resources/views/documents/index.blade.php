@@ -1,10 +1,10 @@
 @extends('layouts.app', [
-    'title' => '证件列表 - 全录笔记',
-    'headerTitle' => '证件列表',
-    'headerTxt' => '记录个人证件有效时间',
+    'title' => '期限备忘 - 全录笔记',
+    'headerTitle' => '期限备忘',
+    'headerTxt' => '记录证件、会员和物品的到期时间',
     'breadcrumb' => [
         ['label' => '首页', 'url' => route('dashboard')],
-        ['label' => '证件列表'],
+        ['label' => '期限备忘'],
     ],
 ])
 
@@ -15,7 +15,7 @@
                 href="{{ route('documents.create') }}"
                 class="inline-flex w-full items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 sm:w-auto"
             >
-                添加证件
+                添加期限备忘
             </a>
         </div>
 
@@ -85,7 +85,7 @@
                                             编辑
                                         </a>
 
-                                        <form method="POST" action="{{ route('documents.destroy', $document) }}" onsubmit="return confirm('确定删除这条证件记录吗？');">
+                                        <form method="POST" action="{{ route('documents.destroy', $document) }}" onsubmit="return confirm('确定删除这条期限备忘吗？');">
                                             @csrf
                                             @method('DELETE')
                                             <button
@@ -101,7 +101,7 @@
                         @empty
                             <tr>
                                 <td colspan="6" class="px-4 py-10 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
-                                    暂无证件记录，点击“添加证件”开始创建。
+                                    暂无期限备忘，点击“添加期限备忘”开始创建。
                                 </td>
                             </tr>
                         @endforelse

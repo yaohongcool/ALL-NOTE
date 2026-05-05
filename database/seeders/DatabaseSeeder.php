@@ -92,29 +92,29 @@ class DatabaseSeeder extends Seeder
         if ($user->documents()->count() === 0) {
             Document::create([
                 'user_id' => $user->id,
-                'name' => '张三',
-                'category' => '身份证',
+                'name' => '身份证',
+                'category' => '证件',
                 'status' => '正常',
                 'due_date' => now()->addYears(5)->toDateString(),
-                'note' => '演示数据：身份证',
+                'note' => '演示数据：证件',
             ]);
 
             Document::create([
                 'user_id' => $user->id,
-                'name' => '张三',
-                'category' => '驾驶证',
+                'name' => '会员卡',
+                'category' => '会员',
                 'status' => '即将过期',
                 'due_date' => now()->addDays(30)->toDateString(),
-                'note' => '演示数据：驾驶证',
+                'note' => '演示数据：会员',
             ]);
 
             Document::create([
                 'user_id' => $user->id,
-                'name' => '张三',
-                'category' => '护照',
+                'name' => '保修物品',
+                'category' => '物品',
                 'status' => '已过期',
                 'due_date' => now()->subDays(10)->toDateString(),
-                'note' => '演示数据：护照',
+                'note' => '演示数据：物品',
             ]);
         }
     }

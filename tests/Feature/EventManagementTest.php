@@ -253,7 +253,7 @@ class EventManagementTest extends TestCase
         $pages = [
             route('passwords.index') => '添加密码',
             route('assets.index') => '添加资产',
-            route('documents.index') => '添加证件',
+            route('documents.index') => '添加期限备忘',
             route('events.index') => '添加事件',
         ];
 
@@ -308,11 +308,11 @@ class EventManagementTest extends TestCase
         ]);
 
         $user->documents()->create([
-            'name' => '移动端证件',
-            'category' => '身份证',
+            'name' => '移动端期限备忘',
+            'category' => '证件',
             'status' => '正常',
             'due_date' => '2026-05-01',
-            'note' => '证件备注',
+            'note' => '期限备忘备注',
         ]);
 
         $event = $user->events()->create([
@@ -403,8 +403,8 @@ class EventManagementTest extends TestCase
 
         foreach (range(1, 6) as $index) {
             $user->documents()->create([
-                'name' => '证件提醒 ' . $index,
-                'category' => '护照',
+                'name' => '期限备忘 ' . $index,
+                'category' => '物品',
                 'status' => '正常',
                 'due_date' => '2026-05-' . str_pad((string) $index, 2, '0', STR_PAD_LEFT),
             ]);
@@ -412,13 +412,13 @@ class EventManagementTest extends TestCase
 
         $this->actingAs($user)->get(route('dashboard'))
             ->assertOk()
-            ->assertSee('到期提醒')
-            ->assertSee('证件提醒 1')
-            ->assertSee('证件提醒 2')
-            ->assertSee('证件提醒 3')
-            ->assertSee('证件提醒 4')
-            ->assertSee('证件提醒 5')
-            ->assertDontSee('证件提醒 6');
+            ->assertSee('期限备忘')
+            ->assertSee('期限备忘 1')
+            ->assertSee('期限备忘 2')
+            ->assertSee('期限备忘 3')
+            ->assertSee('期限备忘 4')
+            ->assertSee('期限备忘 5')
+            ->assertDontSee('期限备忘 6');
     }
 
     public function test_user_can_quick_delete_own_event_tag(): void
