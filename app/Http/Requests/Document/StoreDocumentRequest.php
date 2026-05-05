@@ -16,7 +16,7 @@ class StoreDocumentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:100'],
-            'category' => ['required', 'string', Rule::in(['证件', '会员', '物品'])],
+            'category' => ['required', 'string', Rule::in(['证件', '会员', '物品', '其它'])],
             'due_date' => ['nullable', 'date'],
             'note' => ['nullable', 'string'],
         ];

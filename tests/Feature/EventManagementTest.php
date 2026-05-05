@@ -280,6 +280,11 @@ class EventManagementTest extends TestCase
             ->assertDontSee('查看')
             ->assertSee(route('events.show', $event), false)
             ->assertDontSee(route('events.edit', $event), false);
+
+        $this->actingAs($user)->get(route('documents.create'))
+            ->assertOk()
+            ->assertSee('当前支持证件、会员、物品、其它')
+            ->assertSee('<option value="其它"', false);
     }
 
     public function test_management_lists_render_mobile_responsive_table_markup(): void

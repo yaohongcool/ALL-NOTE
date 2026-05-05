@@ -1,7 +1,7 @@
 @extends('layouts.app', [
     'title' => '编辑期限备忘 - 全录笔记',
     'headerTitle' => '编辑期限备忘',
-    'headerTxt' => '记录证件、会员和物品的到期时间',
+    'headerTxt' => '记录证件、会员、物品和其它事项的到期时间',
     'breadcrumb' => [
         ['label' => '首页', 'url' => route('dashboard')],
         ['label' => '期限备忘', 'url' => route('documents.index')],

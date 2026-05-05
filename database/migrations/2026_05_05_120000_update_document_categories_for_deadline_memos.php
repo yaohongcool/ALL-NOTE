@@ -9,7 +9,7 @@ return new class extends Migration
     {
         DB::table('documents')->where('category', '身份证')->update(['category' => '证件']);
         DB::table('documents')->where('category', '驾驶证')->update(['category' => '会员']);
-        DB::table('documents')->whereIn('category', ['护照', '其它'])->update(['category' => '物品']);
+        DB::table('documents')->where('category', '护照')->update(['category' => '物品']);
     }
 
     public function down(): void

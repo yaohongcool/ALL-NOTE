@@ -15,6 +15,7 @@ class DocumentController extends Controller
         '证件',
         '会员',
         '物品',
+        '其它',
     ];
 
     public function index(): View

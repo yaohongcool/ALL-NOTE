@@ -46,8 +46,8 @@
 
         
 
-        <section class="grid grid-cols-1 items-start gap-6 xl:grid-cols-3">
-            <div class="xl:col-span-2 rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <section class="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
+            <div class="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <div class="border-b border-slate-200 px-6 py-5 dark:border-slate-800">
                     <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">IT资产</h2>
                     <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
@@ -106,7 +106,7 @@
                 <div class="border-b border-slate-200 px-6 py-5 dark:border-slate-800">
                     <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">期限备忘</h2>
                     <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                        最先到期的资产与期限备忘
+                        证件、会员、物品和其它事项到期速览
                     </p>
                 </div>
 
