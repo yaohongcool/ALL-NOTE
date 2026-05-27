@@ -50,8 +50,8 @@ class DocumentController extends Controller
             'name' => $data['name'],
             'category' => $data['category'],
             'status' => $this->computeStatus($data['due_date'] ?? null),
-            'due_date' => $data['due_date'] ?: null,
-            'note' => $data['note'] ?: null,
+            'due_date' => ($data['due_date'] ?? null),
+            'note' => ($data['note'] ?? null),
         ]);
 
         return redirect()->route('documents.index')
@@ -78,8 +78,8 @@ class DocumentController extends Controller
             'name' => $data['name'],
             'category' => $data['category'],
             'status' => $this->computeStatus($data['due_date'] ?? null),
-            'due_date' => $data['due_date'] ?: null,
-            'note' => $data['note'] ?: null,
+            'due_date' => ($data['due_date'] ?? null),
+            'note' => ($data['note'] ?? null),
         ]);
 
         return redirect()->route('documents.index')

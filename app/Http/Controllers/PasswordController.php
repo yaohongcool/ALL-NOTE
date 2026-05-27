@@ -46,9 +46,9 @@ class PasswordController extends Controller
             'name' => $data['name'],
             'account' => $data['account'],
             'encrypted_password' => $this->cipher->encrypt($data['password']),
-            'phone' => $data['phone'] ?: null,
-            'email' => $data['email'] ?: null,
-            'note' => $data['note'] ?: null,
+            'phone' => $data['phone'] ?? null,
+            'email' => $data['email'] ?? null,
+            'note' => $data['note'] ?? null,
         ]);
 
         return redirect()->route('passwords.index')
@@ -73,9 +73,9 @@ class PasswordController extends Controller
         $payload = [
             'name' => $data['name'],
             'account' => $data['account'],
-            'phone' => $data['phone'] ?: null,
-            'email' => $data['email'] ?: null,
-            'note' => $data['note'] ?: null,
+            'phone' => $data['phone'] ?? null,
+            'email' => $data['email'] ?? null,
+            'note' => $data['note'] ?? null,
         ];
 
         if (filled($data['password'] ?? null)) {

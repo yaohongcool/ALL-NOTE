@@ -51,9 +51,9 @@ class AssetController extends Controller
             'category' => $data['category'],
             'name' => $data['name'],
             'status' => $computedStatus,
-            'due_date' => $data['due_date'] ?: null,
+            'due_date' => ($data['due_date'] ?? null),
             'details_json' => $this->buildDetailsJson($data),
-            'note' => $data['note'] ?: null,
+            'note' => ($data['note'] ?? null),
         ]);
 
         return redirect()->route('assets.index')
@@ -81,9 +81,9 @@ class AssetController extends Controller
             'category' => $data['category'],
             'name' => $data['name'],
             'status' => $computedStatus,
-            'due_date' => $data['due_date'] ?: null,
+            'due_date' => ($data['due_date'] ?? null),
             'details_json' => $this->buildDetailsJson($data),
-            'note' => $data['note'] ?: null,
+            'note' => ($data['note'] ?? null),
         ]);
 
         return redirect()->route('assets.index')
