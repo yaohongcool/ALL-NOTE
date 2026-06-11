@@ -268,9 +268,9 @@ class PasswordManagementTest extends TestCase
         ]);
 
         $this->actingAs($user)->postJson(route('passwords.reveal', $password))
-            ->assertOk()
+            ->assertStatus(422)
             ->assertJson([
-                'password' => '[解密失败]',
+                'message' => '读取密码失败，请稍后重试。',
             ]);
     }
 

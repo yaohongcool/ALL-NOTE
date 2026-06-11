@@ -103,7 +103,10 @@ class PasswordController extends Controller
         $this->authorizePassword($password);
 
         try {
-            $plainPassword = $this->cipher->decrypt($password->encrypted_password);
+            $plainPassword = $this->cipher->decrypt(
+                $password->encrypted_password,
+                $password->id
+            );
 
             return response()->json([
                 'password' => $plainPassword,
