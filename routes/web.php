@@ -8,6 +8,13 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventFileController;
 use App\Http\Controllers\EventRecordController;
 use App\Http\Controllers\EventTagController;
+use App\Http\Controllers\FundController;
+use App\Http\Controllers\FundAccountController;
+use App\Http\Controllers\FundBudgetController;
+use App\Http\Controllers\FundChartController;
+use App\Http\Controllers\FundMonthlyController;
+use App\Http\Controllers\FundRentalController;
+use App\Http\Controllers\FundSkinController;
 use App\Http\Controllers\PasswordController;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +82,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/event-files/{eventFile}', [EventFileController::class, 'show'])->name('event-files.show');
     Route::get('/event-files/{eventFile}/download', [EventFileController::class, 'download'])->name('event-files.download');
     Route::delete('/event-files/{eventFile}', [EventFileController::class, 'destroy'])->name('event-files.destroy');
+
+    // 资金记录
+    Route::get('/funds', [FundController::class, 'index'])->name('funds.index');
+    Route::get('/funds/statistics', [FundController::class, 'statistics'])->name('funds.statistics');
+    Route::get('/funds/chart-data', [FundChartController::class, 'chartData'])->name('funds.chart-data');
+    Route::resource('funds/accounts', FundAccountController::class)->names(['index' => 'funds.accounts.index', 'create' => 'funds.accounts.create', 'store' => 'funds.accounts.store', 'edit' => 'funds.accounts.edit', 'update' => 'funds.accounts.update', 'destroy' => 'funds.accounts.destroy']);
+    Route::resource('funds/budgets', FundBudgetController::class)->names(['index' => 'funds.budgets.index', 'create' => 'funds.budgets.create', 'store' => 'funds.budgets.store', 'edit' => 'funds.budgets.edit', 'update' => 'funds.budgets.update', 'destroy' => 'funds.budgets.destroy']);
+    Route::resource('funds/monthlies', FundMonthlyController::class)->names(['index' => 'funds.monthlies.index', 'create' => 'funds.monthlies.create', 'store' => 'funds.monthlies.store', 'edit' => 'funds.monthlies.edit', 'update' => 'funds.monthlies.update', 'destroy' => 'funds.monthlies.destroy']);
+    Route::resource('funds/skins', FundSkinController::class)->names(['index' => 'funds.skins.index', 'create' => 'funds.skins.create', 'store' => 'funds.skins.store', 'show' => 'funds.skins.show', 'edit' => 'funds.skins.edit', 'update' => 'funds.skins.update', 'destroy' => 'funds.skins.destroy']);
+    Route::resource('funds/skins/{skin}/rentals', FundRentalController::class)->names(['index' => 'funds.rentals.index', 'create' => 'funds.rentals.create', 'store' => 'funds.rentals.store', 'edit' => 'funds.rentals.edit', 'update' => 'funds.rentals.update', 'destroy' => 'funds.rentals.destroy'])->except(['show']);
 });
 
 Route::fallback(function () {

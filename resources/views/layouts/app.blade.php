@@ -139,5 +139,6 @@
             </div>
         </template>
     </div>
+    @stack('scripts')
 </body>
 </html>

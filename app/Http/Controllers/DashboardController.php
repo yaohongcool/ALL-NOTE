@@ -43,6 +43,7 @@ class DashboardController extends Controller
                 'assets_count' => $user->assets()->count(),
                 'documents_count' => $user->documents()->count(),
                 'events_count' => $user->events()->count(),
+                'fund_total' => $user->fundAccounts()->sum('balance'),
             ],
             'assetsOverview' => $assetsOverview,
             'reminders' => $reminders,

@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="space-y-6">
-        <section class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <section class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
             <x-stat-card
                 title="密码总数"
                 :value="$stats['passwords_count']"
@@ -37,6 +37,14 @@
                 hint="当前登录用户的事件记录总数"
                 :createUrl="route('events.create')"
                 :manageUrl="route('events.index')"
+            />
+
+            <x-stat-card
+                title="资金总额"
+                :value="'¥' . number_format($stats['fund_total'] ?? 0, 2)"
+                hint="当前总资产"
+                :createUrl="route('funds.accounts.create')"
+                :manageUrl="route('funds.index')"
             />
         </section>
 

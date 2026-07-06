@@ -53,4 +53,28 @@ class User extends Authenticatable
         return $this->hasMany(EventTag::class);
     }
 
+    public function fundAccounts(): HasMany
+    {
+        return $this->hasMany(FundAccount::class);
+    }
+
+    public function fundBudgets(): HasMany
+    {
+        return $this->hasMany(FundBudget::class);
+    }
+
+    public function fundMonthlies(): HasMany
+    {
+        return $this->hasMany(FundMonthly::class);
+    }
+
+    public function fundSkins(): HasMany
+    {
+        return $this->hasMany(FundSkin::class);
+    }
+
+    public function fundRentals(): HasMany
+    {
+        return $this->hasMany(FundRental::class);
+    }
 }
