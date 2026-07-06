@@ -26,9 +26,9 @@ class StoreFundSkinRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => '请输入饰品名称。',
-            'name.max' => '饰品名称不能超过100个字符。',
-            'cost.required' => '请输入饰品成本。',
+            'name.required' => '请输入虚拟资产名称。',
+            'name.max' => '虚拟资产名称不能超过100个字符。',
+            'cost.required' => '请输入虚拟资产成本。',
             'cost.numeric' => '成本必须是数字。',
             'cost.min' => '成本不能为负数。',
             'uu_price.numeric' => 'UU价格必须是数字。',

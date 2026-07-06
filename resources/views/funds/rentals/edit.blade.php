@@ -5,7 +5,7 @@
     'breadcrumb' => [
         ['label' => '首页', 'url' => route('dashboard')],
         ['label' => '资金记录', 'url' => route('funds.index')],
-        ['label' => '饰品管理', 'url' => route('funds.skins.index')],
+        ['label' => '虚拟资产', 'url' => route('funds.skins.index')],
         ['label' => $skin->name, 'url' => route('funds.skins.edit', $skin)],
         ['label' => '编辑租赁记录'],
     ],

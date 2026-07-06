@@ -15,8 +15,8 @@ class FundAccountController extends Controller
         $user = auth()->user();
 
         $accounts = $user->fundAccounts()
-            ->select(['id', 'user_id', 'name', 'type', 'sort', 'note', 'created_at', 'updated_at'])
-            ->orderBy('sort')
+            ->select(['id', 'user_id', 'name', 'balance', 'note', 'created_at', 'updated_at'])
+            ->orderBy('name')
             ->paginate(10);
 
         return view('funds.accounts.index', [
@@ -37,9 +37,8 @@ class FundAccountController extends Controller
 
         auth()->user()->fundAccounts()->create([
             'name' => $data['name'],
-            'type' => $data['type'],
+            'type' => $data['type'] ?? 'other',
             'balance' => $data['balance'],
-            'sort' => $data['sort'] ?? 0,
             'note' => $data['note'] ?? null,
         ]);
 
@@ -64,9 +63,8 @@ class FundAccountController extends Controller
 
         $account->update([
             'name' => $data['name'],
-            'type' => $data['type'],
+            'type' => $data['type'] ?? 'other',
             'balance' => $data['balance'],
-            'sort' => $data['sort'] ?? 0,
             'note' => $data['note'] ?? null,
         ]);
 

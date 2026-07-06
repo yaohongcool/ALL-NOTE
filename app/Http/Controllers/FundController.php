@@ -20,7 +20,7 @@ class FundController extends Controller
 
         return view('funds.index', [
             'accounts' => $user->fundAccounts()->orderBy('sort')->get(),
-            'totalAssets' => $user->fundAccounts()->sum('balance'),
+            'totalAssets' => $user->fundAccounts()->sum('balance') + $totalSkinValuation,
             'thisMonth' => $user->fundMonthlies()->where('month', now()->startOfMonth()->toDateString())->first(),
             'recentMonthlies' => $user->fundMonthlies()->orderByDesc('month')->limit(6)->get(),
             'budgetCount' => $user->fundBudgets()->count(),

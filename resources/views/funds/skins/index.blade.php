@@ -1,7 +1,7 @@
 @extends('layouts.app', [
-    'title' => '虚拟产品估值一览表 - 全录笔记',
-    'headerTitle' => '虚拟产品估值一览表',
-    'headerTxt' => '饰品成本、价格与租赁收益概览',
+    'title' => '虚拟资产估值一览表 - 全录笔记',
+    'headerTitle' => '虚拟资产估值一览表',
+    'headerTxt' => '虚拟资产成本、价格与租赁收益概览',
     'breadcrumb' => [
         ['label' => '首页', 'url' => route('dashboard')],
         ['label' => '资金记录', 'url' => route('funds.index')],
@@ -11,6 +11,15 @@
 
 @section('content')
     <div class="space-y-6">
+        <div class="flex justify-start">
+            <a
+                href="{{ route('funds.skins.create') }}"
+                class="inline-flex w-full items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 sm:w-auto"
+            >
+                新增虚拟资产
+            </a>
+        </div>
+
         <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div class="responsive-table-wrap overflow-x-auto">
                 <table class="responsive-table min-w-full divide-y divide-slate-200 dark:divide-slate-800">
@@ -28,6 +37,7 @@
                             <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">日均收益</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">月均收益</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">年化</th>
+                            <th class="px-3 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">操作</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
@@ -79,9 +89,16 @@
                                 <td data-label="年化" class="px-3 py-4 align-middle">
                                     <span class="text-sm text-slate-600 dark:text-slate-300">{{ number_format($annualRate, 1) }}%</span>
                                 </td>
+                                <td data-label="操作" class="px-3 py-4 align-middle">
+                                    <x-row-actions
+                                        :editRoute="route('funds.skins.edit', $skin)"
+                                        :deleteRoute="route('funds.skins.destroy', $skin)"
+                                        deleteConfirm="确定删除这个虚拟资产吗？"
+                                    />
+                                </td>
                             </tr>
                         @empty
-                            <x-empty-row :colspan="12" message="暂无一览表数据，请先添加饰品。" />
+                            <x-empty-row :colspan="13" message="暂无一览表数据，请先添加虚拟资产。" />
                         @endforelse
                     </tbody>
                 </table>

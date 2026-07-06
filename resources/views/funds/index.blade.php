@@ -1,7 +1,7 @@
 @extends('layouts.app', [
     'title' => '资金记录 - 全录笔记',
     'headerTitle' => '资金记录',
-    'headerTxt' => '资产、账户、预算与饰品租赁管理',
+    'headerTxt' => '资产、账户、预算与虚拟资产租赁管理',
     'breadcrumb' => [
         ['label' => '首页', 'url' => route('dashboard')],
         ['label' => '资金记录'],
@@ -123,7 +123,7 @@
                                     'housing_base' => 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40',
                                     'housing_payment' => 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40',
                                 ];
-                                $color = $typeColors[$account->type] ?? 'text-slate-600 bg-slate-50 dark:bg-slate-800';
+                                $color = $typeColors[$account->type->value] ?? 'text-slate-600 bg-slate-50 dark:bg-slate-800';
                             @endphp
                             <div class="flex items-center justify-between rounded-xl border border-slate-100 px-3 py-2 dark:border-slate-800">
                                 <div class="flex items-center gap-2">
@@ -134,6 +134,18 @@
                             </div>
                         @endforeach
                     </div>
+
+                    @if(($totalSkinValuation ?? 0) > 0)
+                    <div class="mt-3 rounded-xl border border-dashed border-purple-200 bg-purple-50/50 px-3 py-2 dark:border-purple-900 dark:bg-purple-950/30">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="inline-block h-2 w-2 rounded-full bg-purple-400 dark:bg-purple-500"></span>
+                                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">虚拟资产</span>
+                            </div>
+                            <span class="text-sm font-semibold text-purple-600 dark:text-purple-400">¥{{ number_format($totalSkinValuation, 2) }}</span>
+                        </div>
+                    </div>
+                    @endif
                 @else
                     <p class="py-4 text-center text-sm text-slate-500 dark:text-slate-400">暂无账户记录</p>
                 @endif
@@ -147,7 +159,7 @@
 
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <div class="mb-4 flex items-center justify-between">
-                    <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">饰品管理</h3>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">虚拟资产</h3>
                     <a href="{{ route('funds.skins.index') }}" class="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400">查看全部</a>
                 </div>
 
@@ -155,7 +167,7 @@
                     @if(isset($skins) && $skins->isNotEmpty())
                     <div class="grid grid-cols-2 gap-3">
                         <div class="rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
-                            <p class="text-xs text-slate-500 dark:text-slate-400">饰品数量</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">虚拟资产数量</p>
                             <p class="mt-1 text-lg font-bold text-slate-900 dark:text-slate-100">{{ $skins->count() }}</p>
                         </div>
                         <div class="rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
@@ -165,7 +177,7 @@
                     </div>
                     @endif
                     <a href="{{ route('funds.skins.index') }}" class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
-                        <span class="text-sm font-medium text-slate-700 dark:text-slate-200">虚拟产品估值一览表</span>
+                        <span class="text-sm font-medium text-slate-700 dark:text-slate-200">虚拟资产估值一览表</span>
                         <span class="text-slate-400">&rarr;</span>
                     </a>
                     <a href="{{ route('funds.historical-earnings') }}" class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">

@@ -22,7 +22,7 @@
                 'action' => route('funds.accounts.store'),
                 'method' => 'POST',
                 'submitText' => '保存账户',
-                'account' => new \App\Models\FundAccount(['balance' => 0, 'sort' => 0]),
+                'account' => new \App\Models\FundAccount(['balance' => 0]),
             ])
         </div>
     </div>

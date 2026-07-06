@@ -63,7 +63,7 @@ class FundSkinController extends Controller
         ]);
 
         return redirect()->route('funds.skins.index')
-            ->with('success', '饰品记录已创建。');
+            ->with('success', '虚拟资产记录已创建。');
     }
 
     public function show(FundSkin $skin): RedirectResponse
@@ -96,7 +96,7 @@ class FundSkinController extends Controller
         ]);
 
         return redirect()->route('funds.skins.index')
-            ->with('success', '饰品记录已更新。');
+            ->with('success', '虚拟资产记录已更新。');
     }
 
     public function destroy(FundSkin $skin): RedirectResponse
@@ -106,7 +106,7 @@ class FundSkinController extends Controller
         $skin->delete();
 
         return redirect()->route('funds.skins.index')
-            ->with('success', '饰品记录已删除。');
+            ->with('success', '虚拟资产记录已删除。');
     }
 
     protected function authorizeSkin(FundSkin $skin): void

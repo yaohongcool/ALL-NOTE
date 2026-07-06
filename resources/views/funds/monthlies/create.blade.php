@@ -11,22 +11,9 @@
 ])
 
 @section('content')
-    <div class="max-w-4xl">
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">创建月度记录</h2>
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                记录当月收入、支出和存款进度
-            </p>
-
-            @include('funds.monthlies._form', [
-                'action' => route('funds.monthlies.store'),
-                'method' => 'POST',
-                'submitText' => '保存月度记录',
-                'monthly' => new \App\Models\FundMonthly([
-                    'month' => now()->format('Y-m'),
-                    'savings_target' => $defaultSavingsTarget ?? 0,
-                ]),
-            ])
-        </div>
+    <div class="space-y-6">
+        <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-center text-sm text-slate-500 dark:text-slate-400">暂无数据</p>
+        </section>
     </div>
 @endsection

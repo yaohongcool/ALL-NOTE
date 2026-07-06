@@ -139,6 +139,17 @@
             </div>
         </template>
     </div>
+    <script>
+        document.addEventListener('submit', function(e) {
+            if (e.target.tagName !== 'FORM' || e.target.dataset.submitting) {
+                e.preventDefault();
+                return;
+            }
+            e.target.dataset.submitting = '1';
+            var btn = e.target.querySelector('button[type="submit"]');
+            if (btn) btn.disabled = true;
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

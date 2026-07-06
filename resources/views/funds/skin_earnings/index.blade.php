@@ -1,11 +1,11 @@
 @extends('layouts.app', [
     'title' => '历史收益 - 全录笔记',
     'headerTitle' => '历史收益',
-    'headerTxt' => '管理饰品历史收益记录',
+    'headerTxt' => '管理虚拟资产历史收益记录',
     'breadcrumb' => [
         ['label' => '首页', 'url' => route('dashboard')],
         ['label' => '资金记录', 'url' => route('funds.index')],
-        ['label' => '饰品管理', 'url' => route('funds.skins.index')],
+        ['label' => '虚拟资产', 'url' => route('funds.skins.index')],
         ['label' => $skin->name, 'url' => route('funds.skins.edit', $skin)],
         ['label' => '历史收益'],
     ],
@@ -27,7 +27,7 @@
             <table class="responsive-table min-w-full divide-y divide-slate-200 dark:divide-slate-800">
                 <thead class="bg-slate-50 dark:bg-slate-800/60">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">月份</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">时间</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">收益</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">备注</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">操作</th>
@@ -36,8 +36,8 @@
                 <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                     @forelse ($earnings as $earning)
                         <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                            <td data-label="月份" class="px-4 py-4 align-middle">
-                                <span class="text-sm text-slate-700 dark:text-slate-200">{{ $earning->month->format('Y年m月') }}</span>
+                                <td data-label="时间" class="px-4 py-4 align-middle">
+                                    <span class="text-sm text-slate-700 dark:text-slate-200">{{ $earning->month->format('Y-m-d') }}</span>
                             </td>
                             <td data-label="收益" class="px-4 py-4 align-middle">
                                 <span class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">¥{{ number_format($earning->revenue, 2) }}</span>

@@ -1,11 +1,11 @@
 @extends('layouts.app', [
     'title' => '编辑收益 - 全录笔记',
     'headerTitle' => '编辑历史收益',
-    'headerTxt' => '更新饰品历史收益记录',
+    'headerTxt' => '更新虚拟资产历史收益记录',
     'breadcrumb' => [
         ['label' => '首页', 'url' => route('dashboard')],
         ['label' => '资金记录', 'url' => route('funds.index')],
-        ['label' => '饰品管理', 'url' => route('funds.skins.index')],
+        ['label' => '虚拟资产', 'url' => route('funds.skins.index')],
         ['label' => $skin->name, 'url' => route('funds.skins.edit', $skin)],
         ['label' => '编辑收益'],
     ],
@@ -24,6 +24,8 @@
                 'method' => 'PUT',
                 'submitText' => '更新收益记录',
                 'earning' => $earning,
+                'skins' => $skins,
+                'isCreate' => false,
             ])
         </div>
     </div>

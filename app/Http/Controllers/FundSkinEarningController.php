@@ -24,21 +24,27 @@ class FundSkinEarningController extends Controller
     {
         $this->authorize($skin);
 
+        $skins = auth()->user()->fundSkins()->orderBy('name')->get();
+
         return view('funds.skin_earnings.create', [
             'skin' => $skin,
+            'skins' => $skins,
             'earning' => new FundSkinEarning(['skin_id' => $skin->id, 'month' => now()->startOfMonth()->toDateString()]),
         ]);
     }
 
     public function store(FundSkin $skin, StoreFundSkinEarningRequest $request): RedirectResponse
     {
-        $this->authorize($skin);
+        $data = $request->validated();
+        $skinId = $data['skin_id'] ?? $skin->id;
+
+        $targetSkin = auth()->user()->fundSkins()->findOrFail($skinId);
 
         auth()->user()->fundSkinEarnings()->create([
-            'skin_id' => $skin->id,
-            'month' => $request->validated()['month'],
-            'revenue' => $request->validated()['revenue'],
-            'note' => $request->validated()['note'] ?? null,
+            'skin_id' => $targetSkin->id,
+            'month' => $data['month'],
+            'revenue' => $data['revenue'],
+            'note' => $data['note'] ?? null,
         ]);
 
         return redirect()->route('funds.skins.index')->with('success', '收益记录已创建。');
@@ -48,7 +54,9 @@ class FundSkinEarningController extends Controller
     {
         $this->authorize($skin);
 
-        return view('funds.skin_earnings.edit', compact('skin', 'earning'));
+        $skins = auth()->user()->fundSkins()->orderBy('name')->get();
+
+        return view('funds.skin_earnings.edit', compact('skin', 'earning', 'skins'));
     }
 
     public function update(FundSkin $skin, FundSkinEarning $earning, UpdateFundSkinEarningRequest $request): RedirectResponse

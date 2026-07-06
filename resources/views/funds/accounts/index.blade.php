@@ -26,9 +26,7 @@
                     <thead class="bg-slate-50 dark:bg-slate-800/60">
                         <tr>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">名称</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">类型</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">余额</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">排序</th>
                             <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">操作</th>
                         </tr>
                     </thead>
@@ -45,14 +43,8 @@
                                         </p>
                                     @endif
                                 </td>
-                                <td data-label="类型" class="px-4 py-4 align-middle">
-                                    <span class="text-sm text-slate-700 dark:text-slate-200">{{ $account->type }}</span>
-                                </td>
                                 <td data-label="余额" class="px-4 py-4 align-middle">
                                     <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">¥{{ number_format($account->balance, 2) }}</span>
-                                </td>
-                                <td data-label="排序" class="px-4 py-4 align-middle">
-                                    <span class="text-sm text-slate-600 dark:text-slate-300">{{ $account->sort }}</span>
                                 </td>
                                 <td data-label="操作" class="px-4 py-4 align-middle">
                                     <x-row-actions
@@ -63,7 +55,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <x-empty-row :colspan="5" message="暂无账户记录，点击添加账户开始创建。" />
+                            <x-empty-row :colspan="3" message="暂无账户记录，点击添加账户开始创建。" />
                         @endforelse
                     </tbody>
                 </table>

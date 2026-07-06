@@ -1,8 +1,23 @@
-<form
+    <form
     method="POST"
     action="{{ $action }}"
     class="mt-6 space-y-5"
-    x-data="{ type: @js(old('type', $budget->type ?? 'expense')) }"
+    x-data="{
+        type: @js(old('type', $budget->type ?? 'expense')),
+        calcMode: 'none',
+        monthly: @js(old('monthly_amount', $budget->monthly_amount ?? 0)),
+        annual: @js(old('annual_amount', $budget->annual_amount ?? 0)),
+        onMonthly(val) {
+            this.monthly = parseFloat(val) || 0;
+            this.annual = this.monthly * 12;
+            this.calcMode = this.annual === 0 ? 'none' : 'monthly';
+        },
+        onAnnual(val) {
+            this.annual = parseFloat(val) || 0;
+            this.monthly = this.annual / 12;
+            this.calcMode = this.monthly === 0 ? 'none' : 'annual';
+        }
+    }"
 >
     @csrf
     @if ($method !== 'POST')
@@ -67,6 +82,10 @@
                 name="monthly_amount"
                 type="number"
                 step="0.01"
+                x-model.number="monthly"
+                @input="onMonthly($event.target.value)"
+                :disabled="calcMode === 'annual'"
+                :class="calcMode === 'annual' ? 'opacity-50 cursor-not-allowed bg-slate-100 dark:bg-slate-900' : ''"
                 value="{{ old('monthly_amount', $budget->monthly_amount) }}"
                 class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
                 placeholder="0.00"
@@ -85,6 +104,10 @@
                 name="annual_amount"
                 type="number"
                 step="0.01"
+                x-model.number="annual"
+                @input="onAnnual($event.target.value)"
+                :disabled="calcMode === 'monthly'"
+                :class="calcMode === 'monthly' ? 'opacity-50 cursor-not-allowed bg-slate-100 dark:bg-slate-900' : ''"
                 value="{{ old('annual_amount', $budget->annual_amount) }}"
                 class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
                 placeholder="0.00"

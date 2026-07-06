@@ -10,17 +10,21 @@
 
     <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
         <div>
-            <label for="month" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
-                月份 <span class="text-red-500">*</span>
+            <label for="skin_id" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
+                虚拟资产 <span class="text-red-500">*</span>
             </label>
-            <input
-                id="month"
-                name="month"
-                type="date"
-                value="{{ old('month', $earning->month ? $earning->month->format('Y-m-d') : '') }}"
+            <select
+                id="skin_id"
+                name="skin_id"
+                {{ $isCreate ? '' : 'disabled' }}
                 class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
             >
-            @error('month')
+                <option value="">-- 请选择 --</option>
+                @foreach($skins as $s)
+                    <option value="{{ $s->id }}" @selected(old('skin_id', $earning->skin_id) == $s->id)>{{ $s->name }}</option>
+                @endforeach
+            </select>
+            @error('skin_id')
                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
             @enderror
         </div>
@@ -39,6 +43,22 @@
                 placeholder="0.00"
             >
             @error('revenue')
+                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label for="month" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
+                时间 <span class="text-red-500">*</span>
+            </label>
+            <input
+                id="month"
+                name="month"
+                type="date"
+                value="{{ old('month', $earning->month ? $earning->month->format('Y-m-d') : '') }}"
+                class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
+            >
+            @error('month')
                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
             @enderror
         </div>
@@ -72,7 +92,7 @@
             href="{{ route('funds.skins.index') }}"
             class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
         >
-            返回详情
+            返回
         </a>
     </div>
 </form>
