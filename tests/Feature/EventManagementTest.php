@@ -259,7 +259,7 @@ class EventManagementTest extends TestCase
 
         $pages = [
             route('passwords.index') => '添加密码',
-            route('assets.index') => '添加资产',
+            route('assets.index') => '添加IT资产',
             route('documents.index') => '添加期限备忘',
             route('events.index') => '添加事件',
         ];

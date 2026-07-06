@@ -1,10 +1,10 @@
 @extends('layouts.app', [
-    'title' => '资产列表 - 全录笔记',
-    'headerTitle' => '资产列表',
-    'headerTxt' => '存储物理设备和数字资产信息',
+    'title' => 'IT资产 - 全录笔记',
+    'headerTitle' => 'IT资产',
+    'headerTxt' => '存储物理设备和数字财产信息',
     'breadcrumb' => [
         ['label' => '首页', 'url' => route('dashboard')],
-        ['label' => '资产列表'],
+        ['label' => 'IT资产'],
     ],
 ])
 
@@ -15,7 +15,7 @@
                 href="{{ route('assets.create') }}"
                 class="inline-flex w-full items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 sm:w-auto"
             >
-                添加资产
+                添加IT资产
             </a>
         </div>
 
@@ -92,7 +92,7 @@
                                             编辑
                                         </a>
 
-                                        <form method="POST" action="{{ route('assets.destroy', $asset) }}" onsubmit="return confirm('确定删除这条资产记录吗？');">
+                                        <form method="POST" action="{{ route('assets.destroy', $asset) }}" onsubmit="return confirm('确定删除这条IT资产记录吗？');">
                                             @csrf
                                             @method('DELETE')
                                             <button
@@ -108,7 +108,7 @@
                         @empty
                             <tr>
                                 <td colspan="7" class="px-4 py-10 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
-                                    暂无资产记录，点击“添加资产”开始创建。
+                                    暂无IT资产记录，点击“添加IT资产”开始创建。
                                 </td>
                             </tr>
                         @endforelse

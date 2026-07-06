@@ -26,8 +26,8 @@ class AssetManagementTest extends TestCase
 
         $this->actingAs($user)->get(route('assets.index'))
             ->assertOk()
-            ->assertSee('暂无资产记录')
-            ->assertSee('添加资产');
+            ->assertSee('暂无IT资产记录')
+            ->assertSee('添加IT资产');
     }
 
     public function test_index_page_lists_assets(): void
@@ -73,9 +73,9 @@ class AssetManagementTest extends TestCase
 
         $this->actingAs($user)->get(route('assets.create'))
             ->assertOk()
-            ->assertSee('创建资产记录')
+            ->assertSee('创建IT资产记录')
             ->assertSee('添加物理设备、云服务器、域名信息')
-            ->assertSee('保存资产')
+            ->assertSee('保存IT资产')
             ->assertSee('物理设备')
             ->assertSee('云服务器')
             ->assertSee('域名');

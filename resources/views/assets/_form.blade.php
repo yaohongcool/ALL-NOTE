@@ -12,7 +12,7 @@
     <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
         <div>
             <label for="category" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
-                资产分类 <span class="text-red-500">*</span>
+                IT资产分类 <span class="text-red-500">*</span>
             </label>
             <select
                 id="category"

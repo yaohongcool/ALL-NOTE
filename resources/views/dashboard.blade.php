@@ -16,9 +16,9 @@
             />
 
             <x-stat-card
-                title="资产总数"
+                title="IT资产总数"
                 :value="$stats['assets_count']"
-                hint="当前登录用户的资产记录总数"
+                hint="当前登录用户的IT资产记录总数"
                 :createUrl="route('assets.create')"
                 :manageUrl="route('assets.index')"
             />
@@ -47,7 +47,7 @@
                 <div class="border-b border-slate-200 px-6 py-5 dark:border-slate-800">
                     <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">IT资产</h2>
                     <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                        物理设备和数字资产一览
+                        物理设备和数字财产一览
                     </p>
                 </div>
 
