@@ -59,7 +59,7 @@ class FundRentalController extends Controller
             'note' => $data['note'] ?? null,
         ]);
 
-        return redirect()->route('funds.skins.show', $skin)
+        return redirect()->route('funds.skins.index')
             ->with('success', '租赁记录已创建。');
     }
 
@@ -96,7 +96,7 @@ class FundRentalController extends Controller
             'note' => $data['note'] ?? null,
         ]);
 
-        return redirect()->route('funds.skins.show', $skin)
+        return redirect()->route('funds.skins.index')
             ->with('success', '租赁记录已更新。');
     }
 
@@ -106,7 +106,7 @@ class FundRentalController extends Controller
 
         $rental->delete();
 
-        return redirect()->route('funds.skins.show', $skin)
+        return redirect()->route('funds.skins.index')
             ->with('success', '租赁记录已删除。');
     }
 

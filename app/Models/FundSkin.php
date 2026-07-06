@@ -29,4 +29,9 @@ class FundSkin extends Model
     {
         return $this->hasMany(FundRental::class, 'skin_id');
     }
+
+    public function earnings(): HasMany
+    {
+        return $this->hasMany(FundSkinEarning::class);
+    }
 }

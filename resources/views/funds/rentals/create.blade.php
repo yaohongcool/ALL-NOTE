@@ -6,7 +6,7 @@
         ['label' => '首页', 'url' => route('dashboard')],
         ['label' => '资金记录', 'url' => route('funds.index')],
         ['label' => '饰品管理', 'url' => route('funds.skins.index')],
-        ['label' => $skin->name, 'url' => route('funds.skins.show', $skin)],
+        ['label' => $skin->name, 'url' => route('funds.skins.edit', $skin)],
         ['label' => '添加租赁记录'],
     ],
 ])

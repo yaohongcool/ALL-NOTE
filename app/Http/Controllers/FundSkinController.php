@@ -66,16 +66,9 @@ class FundSkinController extends Controller
             ->with('success', '饰品记录已创建。');
     }
 
-    public function show(FundSkin $skin): View
+    public function show(FundSkin $skin): RedirectResponse
     {
-        $this->authorizeSkin($skin);
-
-        $skin->load('rentals');
-
-        return view('funds.skins.show', [
-            'skin' => $skin,
-            'rentals' => $skin->rentals,
-        ]);
+        return redirect()->route('funds.skins.index');
     }
 
     public function edit(FundSkin $skin): View
