@@ -2,6 +2,10 @@
 
 namespace App\Services;
 
+use App\Enums\AssetCategory;
+use App\Enums\DocumentCategory;
+use App\Enums\EventStatus;
+use App\Enums\ExpiryStatus;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 
@@ -34,9 +38,9 @@ class UserBootstrapService
     protected function createDefaultAsset(User $user): void
     {
         $user->assets()->create([
-            'category' => '物理设备',
+            'category' => AssetCategory::Physical->value,
             'name' => '个人电脑（演示数据）',
-            'status' => '正常',
+            'status' => ExpiryStatus::Normal->value,
             'due_date' => null,
             'details_json' => [
                 'cpu_model' => 'i5-10400F',
@@ -58,8 +62,8 @@ class UserBootstrapService
 
         $user->documents()->create([
             'name' => '会员卡（演示数据）',
-            'category' => '会员',
-            'status' => '即将过期',
+            'category' => DocumentCategory::Membership->value,
+            'status' => ExpiryStatus::Expiring->value,
             'due_date' => $createdAt->addDays(30)->toDateString(),
             'note' => '演示数据',
         ]);

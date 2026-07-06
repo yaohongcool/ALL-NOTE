@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\BlockType;
 use App\Models\EventFile;
 use App\Models\EventRecord;
 use Illuminate\Support\HtmlString;
@@ -9,11 +10,12 @@ use Illuminate\Support\Str;
 
 class EventContentService
 {
+    private const DOCUMENT_TYPE = 'event_record_content';
     public function normalize(?string $content): array
     {
         if (! filled($content)) {
             return [
-                'type' => 'event_record_content',
+                'type' => self::DOCUMENT_TYPE,
                 'version' => 1,
                 'blocks' => [],
             ];
@@ -31,7 +33,7 @@ class EventContentService
         }
 
         return [
-            'type' => 'event_record_content',
+            'type' => self::DOCUMENT_TYPE,
             'version' => 1,
             'blocks' => collect($blocks)
                 ->map(fn ($block) => $this->normalizeBlock($block))
@@ -47,13 +49,13 @@ class EventContentService
 
         $document['blocks'] = collect($document['blocks'])
             ->map(function (array $block) use ($fileIdByKey) {
-                if (($block['type'] ?? null) !== 'image') {
+                if (($block['type'] ?? null) !== BlockType::Image->value) {
                     return $block;
                 }
 
                 if (! empty($block['file_id'])) {
                     return [
-                        'type' => 'image',
+                        'type' => BlockType::Image->value,
                         'file_id' => (int) $block['file_id'],
                     ];
                 }
@@ -61,7 +63,7 @@ class EventContentService
                 $key = (string) ($block['key'] ?? '');
                 if ($key !== '' && isset($fileIdByKey[$key])) {
                     return [
-                        'type' => 'image',
+                        'type' => BlockType::Image->value,
                         'file_id' => (int) $fileIdByKey[$key],
                     ];
                 }
@@ -82,7 +84,7 @@ class EventContentService
     public function referencedFileIds(?string $content): array
     {
         return collect($this->normalize($content)['blocks'])
-            ->where('type', 'image')
+            ->where('type', BlockType::Image->value)
             ->pluck('file_id')
             ->filter(fn ($id) => is_numeric($id))
             ->map(fn ($id) => (int) $id)
@@ -94,8 +96,8 @@ class EventContentService
     public function textSummary(?string $content, int $length = 30): string
     {
         $text = collect($this->normalize($content)['blocks'])
-            ->where('type', 'text')
-            ->pluck('text')
+            ->where('type', BlockType::Text->value)
+            ->pluck(BlockType::Text->value)
             ->filter()
             ->implode("\n");
 
@@ -106,104 +108,85 @@ class EventContentService
             : Str::substr($text, 0, $length) . '...';
     }
 
-    public function renderDisplay(?string $content, EventRecord $record, ?string $context = null): HtmlString
+    private function renderBlocks(?string $content, EventRecord $record, ?string $context, string $emptyPlaceholder, \Closure $renderImage, \Closure $renderText): HtmlString
     {
         $files = $this->inlineFilesById($record, $context);
         $document = $this->normalize($content);
-        $referencedFileIds = collect($document['blocks'])->where('type', 'image')->pluck('file_id')->filter()->map(fn ($id) => (int) $id);
+        $referencedFileIds = collect($document['blocks'])
+            ->where('type', BlockType::Image->value)
+            ->pluck('file_id')
+            ->filter()
+            ->map(fn ($id) => (int) $id);
+
         $blocks = collect($document['blocks'])
             ->merge(collect($files)
                 ->reject(fn (EventFile $file) => $referencedFileIds->contains($file->id))
                 ->map(fn (EventFile $file) => [
-                    'type' => 'image',
+                    'type' => BlockType::Image->value,
                     'file_id' => $file->id,
                 ]));
 
         $html = $blocks
-            ->map(function (array $block) use ($files) {
-                if (($block['type'] ?? null) === 'image') {
+            ->map(function (array $block) use ($files, $renderImage, $renderText) {
+                if (($block['type'] ?? null) === BlockType::Image->value) {
                     $file = $files[(int) ($block['file_id'] ?? 0)] ?? null;
-
-                    if (! $file) {
-                        return '';
-                    }
-
-                    $src = e(route('event-files.show', $file));
-                    $alt = '正文图片';
-
-                    return <<<HTML
-<figure class="my-4">
-    <a href="{$src}" target="_blank" class="inline-block max-w-full">
-        <img src="{$src}" alt="{$alt}" class="rounded-xl border border-slate-200 bg-white object-contain dark:border-slate-800" style="max-width: min(100%, 560px); max-height: 360px; width: auto; height: auto;">
-    </a>
-</figure>
-HTML;
+                    if (! $file) { return ''; }
+                    return $renderImage($file);
                 }
 
                 $text = trim((string) ($block['text'] ?? ''));
-                if ($text === '') {
-                    return '';
-                }
-
-                $html = trim($this->renderMarkdownText($text));
-
-                return $html === ''
-                    ? ''
-                    : '<div class="event-markdown">' . $html . '</div>';
+                if ($text === '') { return ''; }
+                return $renderText($text);
             })
             ->filter()
             ->implode("\n");
 
-        return new HtmlString($html !== '' ? $html : '<p class="text-slate-400">-</p>');
+        return new HtmlString($html !== '' ? $html : $emptyPlaceholder);
+    }
+
+    public function renderDisplay(?string $content, EventRecord $record, ?string $context = null): HtmlString
+    {
+        return $this->renderBlocks(
+            $content, $record, $context,
+            '<p class="text-slate-400">-</p>',
+            function (EventFile $file) {
+                $src = e(route('event-files.show', $file));
+                return <<<HTML
+<figure class="my-4">
+    <a href="{$src}" target="_blank" class="inline-block max-w-full">
+        <img src="{$src}" alt="正文图片" class="rounded-xl border border-slate-200 bg-white object-contain dark:border-slate-800" style="max-width: min(100%, 560px); max-height: 360px; width: auto; height: auto;">
+    </a>
+</figure>
+HTML;
+            },
+            function (string $text) {
+                $html = trim($this->renderMarkdownText($text));
+                return $html === '' ? '' : '<div class="event-markdown">' . $html . '</div>';
+            }
+        );
     }
 
     public function renderEditor(?string $content, EventRecord $record, ?string $context = null): HtmlString
     {
-        $files = $this->inlineFilesById($record, $context);
-        $document = $this->normalize($content);
-        $referencedFileIds = collect($document['blocks'])->where('type', 'image')->pluck('file_id')->filter()->map(fn ($id) => (int) $id);
-        $blocks = collect($document['blocks'])
-            ->merge(collect($files)
-                ->reject(fn (EventFile $file) => $referencedFileIds->contains($file->id))
-                ->map(fn (EventFile $file) => [
-                    'type' => 'image',
-                    'file_id' => $file->id,
-                ]));
-
-        $html = $blocks
-            ->map(function (array $block) use ($files) {
-                if (($block['type'] ?? null) === 'image') {
-                    $file = $files[(int) ($block['file_id'] ?? 0)] ?? null;
-
-                    if (! $file) {
-                        return '';
-                    }
-
-                    $src = e(route('event-files.show', $file));
-                    $alt = '正文图片';
-                    $fileId = (int) $file->id;
-
-                    return <<<HTML
+        return $this->renderBlocks(
+            $content, $record, $context,
+            '<p><br></p>',
+            function (EventFile $file) {
+                $src = e(route('event-files.show', $file));
+                $fileId = (int) $file->id;
+                return <<<HTML
 <figure data-inline-image="1" contenteditable="false" class="my-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950">
     <a href="{$src}" target="_blank" class="inline-block max-w-full">
-        <img src="{$src}" alt="{$alt}" data-file-id="{$fileId}" class="rounded-xl object-contain" style="max-width: min(100%, 560px); max-height: 360px; width: auto; height: auto;">
+        <img src="{$src}" alt="正文图片" data-file-id="{$fileId}" class="rounded-xl object-contain" style="max-width: min(100%, 560px); max-height: 360px; width: auto; height: auto;">
     </a>
     <button type="button" data-remove-inline-image class="mt-2 rounded-xl border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950/40">删除图片</button>
 </figure>
 HTML;
-                }
-
-                $text = (string) ($block['text'] ?? '');
-                if ($text === '') {
-                    return '';
-                }
-
+            },
+            function (string $text) {
                 return '<p>' . nl2br(e($text), false) . '</p>';
-            })
-            ->filter()
-            ->implode("\n");
-
-        return new HtmlString($html !== '' ? $html : '<p><br></p>');
+            }
+        );
     }
 
     protected function documentFromText(string $text): array
@@ -211,12 +194,12 @@ HTML;
         $text = trim($text);
 
         return [
-            'type' => 'event_record_content',
+            'type' => self::DOCUMENT_TYPE,
             'version' => 1,
             'blocks' => $text === '' ? [] : [
                 [
-                    'type' => 'text',
-                    'text' => $text,
+                    'type' => BlockType::Text->value,
+                    BlockType::Text->value => $text,
                 ],
             ],
         ];
@@ -237,10 +220,10 @@ HTML;
             return null;
         }
 
-        if (($block['type'] ?? null) === 'image') {
+        if (($block['type'] ?? null) === BlockType::Image->value) {
             if (isset($block['file_id']) && is_numeric($block['file_id'])) {
                 return [
-                    'type' => 'image',
+                    'type' => BlockType::Image->value,
                     'file_id' => (int) $block['file_id'],
                 ];
             }
@@ -248,19 +231,19 @@ HTML;
             $key = (string) Str::of((string) ($block['key'] ?? ''))->trim()->limit(80, '');
 
             return $key === '' ? null : [
-                'type' => 'image',
+                'type' => BlockType::Image->value,
                 'key' => $key,
             ];
         }
 
-        $text = (string) Str::of((string) ($block['text'] ?? ''))
+        $text = (string) Str::of((string) ($block[BlockType::Text->value] ?? ''))
             ->replace("\r\n", "\n")
             ->replace("\r", "\n")
             ->trim();
 
         return $text === '' ? null : [
-            'type' => 'text',
-            'text' => $text,
+            'type' => BlockType::Text->value,
+            BlockType::Text->value => $text,
         ];
     }
 

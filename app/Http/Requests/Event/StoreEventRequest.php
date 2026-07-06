@@ -34,7 +34,7 @@ class StoreEventRequest extends FormRequest
             'result_images.*' => ['image', 'max:5120'],
             'result_image_keys' => ['nullable', 'string'],
             'attachments' => ['nullable', 'array', 'max:10'],
-            'attachments.*' => ['file', 'max:20480'],
+            'attachments.*' => ['file', 'mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,zip', 'max:20480'],
         ];
     }
 
@@ -63,6 +63,7 @@ class StoreEventRequest extends FormRequest
             'attachments.array' => '附件格式不正确。',
             'attachments.max' => '附件一次最多上传 10 个。',
             'attachments.*.file' => '附件必须是文件。',
+            'attachments.*.mimes' => '附件仅支持 pdf, doc, docx, xls, xlsx, ppt, pptx, txt, zip 格式。',
             'attachments.*.max' => '附件不能超过 20MB。',
         ];
     }

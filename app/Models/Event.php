@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Enums\EventStatus;
+use App\Enums\EventVisibility;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class Event extends Model
@@ -24,15 +26,15 @@ class Event extends Model
     public const VISIBILITY_PUBLIC = 'public';
 
     public const STATUSES = [
-        self::STATUS_PROCESSED,
-        self::STATUS_PROCESSING,
-        self::STATUS_PENDING,
-        self::STATUS_NO_ACTION,
+        EventStatus::Processed->value,
+        EventStatus::Processing->value,
+        EventStatus::Pending->value,
+        EventStatus::NoAction->value,
     ];
 
     public const VISIBILITIES = [
-        self::VISIBILITY_PRIVATE,
-        self::VISIBILITY_PUBLIC,
+        EventVisibility::Private->value,
+        EventVisibility::Public->value,
     ];
 
     protected $fillable = [
@@ -59,9 +61,12 @@ class Event extends Model
     protected static function booted(): void
     {
         static::deleting(function (Event $event) {
-            $event->files()
-                ->get()
-                ->each(fn (EventFile $file) => Storage::disk($file->disk)->delete($file->path));
+            $event->files()->select(['id', 'disk', 'path'])->get()->each(function (EventFile $file) {
+                $deleted = Storage::disk($file->disk)->delete($file->path);
+                if (! $deleted && Storage::disk($file->disk)->exists($file->path)) {
+                    Log::warning('事件删除时文件物理删除失败', ['event_id' => $event->id, 'file_id' => $file->id, 'disk' => $file->disk, 'path' => $file->path]);
+                }
+            });
         });
     }
 
@@ -91,16 +96,6 @@ class Event extends Model
         return $this->hasMany(EventFile::class);
     }
 
-    public function scopeVisibleTo(Builder $query, User|int $user): Builder
-    {
-        $userId = $user instanceof User ? $user->id : $user;
-
-        return $query->where(function (Builder $query) use ($userId) {
-            $query->where('user_id', $userId)
-                ->orWhere('visibility', self::VISIBILITY_PUBLIC);
-        });
-    }
-
     public function isOwner(User|int|null $user): bool
     {
         $userId = $user instanceof User ? $user->id : $user;
@@ -110,14 +105,13 @@ class Event extends Model
 
     public function isPublic(): bool
     {
-        return $this->visibility === self::VISIBILITY_PUBLIC;
+        return $this->visibility === EventVisibility::Public->value;
     }
 
     public function getVisibilityLabelAttribute(): string
     {
-        return match ($this->visibility) {
-            self::VISIBILITY_PUBLIC => '公开',
-            default => '仅自己可见',
-        };
+        $visibility = EventVisibility::tryFrom($this->visibility);
+
+        return $visibility?->label() ?? EventVisibility::Private->label();
     }
 }

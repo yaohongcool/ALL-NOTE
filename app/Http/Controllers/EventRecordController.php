@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Event\StoreEventRecordRequest;
 use App\Http\Requests\Event\UpdateEventRecordRequest;
 use App\Models\Event;
-use App\Models\EventFile;
 use App\Models\EventRecord;
-use App\Services\EventContentService;
 use App\Services\EventFileService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -17,7 +15,6 @@ class EventRecordController extends Controller
 {
     public function __construct(
         protected EventFileService $eventFileService,
-        protected EventContentService $eventContentService
     ) {
     }
 
@@ -45,14 +42,7 @@ class EventRecordController extends Controller
                 'result' => null,
             ]);
 
-            $fileIdByKey = $this->eventFileService->storeRecordUploads($event, $record, $user, $request);
-
-            $record->update([
-                'process' => $this->eventContentService->replaceUploadKeys($data['process'] ?? null, $fileIdByKey[EventFile::CONTEXT_PROCESS] ?? []),
-                'result' => $this->eventContentService->replaceUploadKeys($data['result'] ?? null, $fileIdByKey[EventFile::CONTEXT_RESULT] ?? []),
-            ]);
-
-            $this->eventFileService->deleteUnreferencedInlineFiles($record->fresh(['files']));
+            $this->eventFileService->saveRecordWithFiles($event, $record, $user, $request, $data);
         });
 
         return redirect()->route('events.show', $event)
@@ -80,14 +70,7 @@ class EventRecordController extends Controller
 
         DB::transaction(function () use ($eventRecord, $user, $data, $request) {
             $this->deleteSelectedFiles($eventRecord, $data['delete_file_ids'] ?? []);
-            $fileIdByKey = $this->eventFileService->storeRecordUploads($eventRecord->event, $eventRecord, $user, $request);
-
-            $eventRecord->update([
-                'process' => $this->eventContentService->replaceUploadKeys($data['process'] ?? null, $fileIdByKey[EventFile::CONTEXT_PROCESS] ?? []),
-                'result' => $this->eventContentService->replaceUploadKeys($data['result'] ?? null, $fileIdByKey[EventFile::CONTEXT_RESULT] ?? []),
-            ]);
-
-            $this->eventFileService->deleteUnreferencedInlineFiles($eventRecord->fresh(['files']));
+            $this->eventFileService->saveRecordWithFiles($eventRecord->event, $eventRecord, $user, $request, $data);
         });
 
         return redirect()->route('events.show', $eventRecord->event)

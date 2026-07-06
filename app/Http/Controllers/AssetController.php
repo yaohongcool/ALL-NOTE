@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AssetCategory;
+use App\Enums\ExpiryStatus;
 use App\Http\Requests\Asset\StoreAssetRequest;
 use App\Http\Requests\Asset\UpdateAssetRequest;
 use App\Models\Asset;
@@ -11,11 +13,12 @@ use Illuminate\Http\RedirectResponse;
 
 class AssetController extends Controller
 {
-    protected array $categories = [
-        '物理设备',
-        '云服务器',
-        '域名',
-    ];
+    protected array $categories;
+
+    public function __construct()
+    {
+        $this->categories = AssetCategory::values();
+    }
 
     public function index(): View
     {
@@ -35,7 +38,7 @@ class AssetController extends Controller
     {
         return view('assets.create', [
             'asset' => new Asset([
-                'category' => '物理设备',
+                'category' => AssetCategory::Physical->value,
                 'details_json' => [],
             ]),
             'categories' => $this->categories,
@@ -108,7 +111,7 @@ class AssetController extends Controller
     protected function buildDetailsJson(array $data): array
     {
         return match ($data['category']) {
-            '物理设备' => [
+            AssetCategory::Physical->value => [
                 'cpu_model' => $data['cpu_model'] ?? null,
                 'gpu_model' => $data['gpu_model'] ?? null,
                 'memory' => $data['memory'] ?? null,
@@ -116,14 +119,14 @@ class AssetController extends Controller
                 'storage_2' => $data['storage_2'] ?? null,
                 'storage_3' => $data['storage_3'] ?? null,
             ],
-            '云服务器' => [
+            AssetCategory::Server->value => [
                 'cpu_cores' => $data['cpu_cores'] ?? null,
                 'memory_size' => $data['memory_size'] ?? null,
                 'ip_address' => $data['ip_address'] ?? null,
                 'operating_system' => $data['operating_system'] ?? null,
                 'provider' => $data['provider'] ?? null,
             ],
-            '域名' => [
+            AssetCategory::Domain->value => [
                 'domain_address' => $data['domain_address'] ?? null,
             ],
             default => [],
@@ -133,21 +136,22 @@ class AssetController extends Controller
     protected function computeStatus(?string $dueDate): string
     {
         if (! $dueDate) {
-            return '正常';
+            return ExpiryStatus::Normal->value;
         }
 
-        $today = Carbon::today('Asia/Shanghai');
-        $due = Carbon::parse($dueDate, 'Asia/Shanghai')->startOfDay();
+        $tz = config('app.display_timezone', 'Asia/Shanghai');
+        $today = Carbon::today($tz);
+        $due = Carbon::parse($dueDate, $tz)->startOfDay();
         $days = $today->diffInDays($due, false);
 
         if ($days < 0) {
-            return '已过期';
+            return ExpiryStatus::Expired->value;
         }
 
         if ($days <= 60) {
-            return '即将到期';
+            return ExpiryStatus::Expiring->value;
         }
 
-        return '正常';
+        return ExpiryStatus::Normal->value;
     }
 }

@@ -59,4 +59,21 @@ class AuthTest extends TestCase
             ->assertSee('rel="apple-touch-icon"', false)
             ->assertSee('apple-touch-icon.png', false);
     }
+
+    public function test_registered_user_password_is_correctly_hashed(): void
+    {
+        $response = $this->post(route('register.store'), [
+            'username' => 'hash-test-user',
+            'password' => 'ValidPass@123',
+            'password_confirmation' => 'ValidPass@123',
+        ]);
+        $response->assertRedirect(route('dashboard'));
+        
+        $this->post(route('logout'));
+        
+        $this->post(route('login.attempt'), [
+            'username' => 'hash-test-user',
+            'password' => 'ValidPass@123',
+        ])->assertRedirect(route('dashboard'));
+    }
 }

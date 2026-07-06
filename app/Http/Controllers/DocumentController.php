@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DocumentCategory;
+use App\Enums\ExpiryStatus;
 use App\Http\Requests\Document\StoreDocumentRequest;
 use App\Http\Requests\Document\UpdateDocumentRequest;
 use App\Models\Document;
@@ -11,12 +13,12 @@ use Illuminate\Http\RedirectResponse;
 
 class DocumentController extends Controller
 {
-    protected array $categories = [
-        '证件',
-        '会员',
-        '物品',
-        '其它',
-    ];
+    protected array $categories;
+
+    public function __construct()
+    {
+        $this->categories = DocumentCategory::values();
+    }
 
     public function index(): View
     {
@@ -36,7 +38,7 @@ class DocumentController extends Controller
     {
         return view('documents.create', [
             'document' => new Document([
-                'category' => '证件',
+                'category' => DocumentCategory::Certificate->value,
             ]),
             'categories' => $this->categories,
         ]);
@@ -104,21 +106,22 @@ class DocumentController extends Controller
     protected function computeStatus(?string $dueDate): string
     {
         if (! $dueDate) {
-            return '正常';
+            return ExpiryStatus::Normal->value;
         }
 
-        $today = Carbon::today('Asia/Shanghai');
-        $due = Carbon::parse($dueDate, 'Asia/Shanghai')->startOfDay();
+        $tz = config('app.display_timezone', 'Asia/Shanghai');
+        $today = Carbon::today($tz);
+        $due = Carbon::parse($dueDate, $tz)->startOfDay();
         $days = $today->diffInDays($due, false);
 
         if ($days < 0) {
-            return '已过期';
+            return ExpiryStatus::Expired->value;
         }
 
         if ($days <= 60) {
-            return '即将到期';
+            return ExpiryStatus::Expiring->value;
         }
 
-        return '正常';
+        return ExpiryStatus::Normal->value;
     }
 }

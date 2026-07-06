@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AssetCategory;
+use App\Enums\DocumentCategory;
+use App\Enums\ExpiryStatus;
 use App\Models\Asset;
 use App\Models\Document;
 use App\Models\Password;
@@ -46,9 +49,9 @@ class DatabaseSeeder extends Seeder
         if ($user->assets()->count() === 0) {
             Asset::create([
                 'user_id' => $user->id,
-                'category' => '物理硬件',
+                'category' => AssetCategory::Physical->value,
                 'name' => '办公主机',
-                'status' => '正常',
+                'status' => ExpiryStatus::Normal->value,
                 'details_json' => [
                     'cpu_model' => 'Intel i7-12700',
                     'gpu_model' => 'RTX 3060',
@@ -62,9 +65,9 @@ class DatabaseSeeder extends Seeder
 
             Asset::create([
                 'user_id' => $user->id,
-                'category' => '云服务器',
+                'category' => AssetCategory::Server->value,
                 'name' => '生产服务器',
-                'status' => '即将过期',
+                'status' => ExpiryStatus::Expiring->value,
                 'due_date' => now()->addDays(45)->toDateString(),
                 'details_json' => [
                     'cpu_cores' => '4',
@@ -78,9 +81,9 @@ class DatabaseSeeder extends Seeder
 
             Asset::create([
                 'user_id' => $user->id,
-                'category' => '域名',
+                'category' => AssetCategory::Domain->value,
                 'name' => '公司官网域名',
-                'status' => '已过期',
+                'status' => ExpiryStatus::Expired->value,
                 'due_date' => now()->subDays(5)->toDateString(),
                 'details_json' => [
                     'domain_address' => 'example.com',
@@ -93,8 +96,8 @@ class DatabaseSeeder extends Seeder
             Document::create([
                 'user_id' => $user->id,
                 'name' => '身份证',
-                'category' => '证件',
-                'status' => '正常',
+                'category' => DocumentCategory::Certificate->value,
+                'status' => ExpiryStatus::Normal->value,
                 'due_date' => now()->addYears(5)->toDateString(),
                 'note' => '演示数据：证件',
             ]);
@@ -102,8 +105,8 @@ class DatabaseSeeder extends Seeder
             Document::create([
                 'user_id' => $user->id,
                 'name' => '会员卡',
-                'category' => '会员',
-                'status' => '即将过期',
+                'category' => DocumentCategory::Membership->value,
+                'status' => ExpiryStatus::Expiring->value,
                 'due_date' => now()->addDays(30)->toDateString(),
                 'note' => '演示数据：会员',
             ]);
@@ -111,8 +114,8 @@ class DatabaseSeeder extends Seeder
             Document::create([
                 'user_id' => $user->id,
                 'name' => '保修物品',
-                'category' => '物品',
-                'status' => '已过期',
+                'category' => DocumentCategory::Item->value,
+                'status' => ExpiryStatus::Expired->value,
                 'due_date' => now()->subDays(10)->toDateString(),
                 'note' => '演示数据：物品',
             ]);

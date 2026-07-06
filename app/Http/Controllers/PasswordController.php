@@ -22,6 +22,7 @@ class PasswordController extends Controller
         $user = auth()->user();
 
         $passwords = $user->passwords()
+            ->select(['id', 'user_id', 'name', 'account', 'phone', 'email', 'note', 'created_at', 'updated_at'])
             ->orderByDesc('updated_at')
             ->orderByDesc('id')
             ->paginate(10);

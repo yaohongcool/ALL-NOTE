@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asset;
 use App\Models\Document;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 
 class DashboardController extends Controller
 {
@@ -14,44 +15,26 @@ class DashboardController extends Controller
 
         $assetsOverview = $user->assets()
             ->oldest('updated_at')
+            ->limit(10)
             ->get();
 
         $assetReminders = $user->assets()
             ->whereNotNull('due_date')
             ->orderBy('due_date')
+            ->limit(5)
             ->get()
-            ->map(function (Asset $asset) {
-                return [
-                    'type' => 'asset',
-                    'title' => $asset->name,
-                    'category' => $asset->category,
-                    'status' => $asset->computed_status,
-                    'days_until_due_label' => $asset->days_until_due_label,
-                    'due_date' => $asset->due_date,
-                    'note' => $asset->note,
-                ];
-            });
+            ->map(fn (Asset $asset) => $this->toReminderArray($asset, 'asset'));
 
         $documentReminders = $user->documents()
             ->whereNotNull('due_date')
             ->orderBy('due_date')
+            ->limit(5)
             ->get()
-            ->map(function (Document $document) {
-                return [
-                    'type' => 'document',
-                    'title' => $document->name,
-                    'category' => $document->category,
-                    'status' => $document->computed_status,
-                    'days_until_due_label' => $document->days_until_due_label,
-                    'due_date' => $document->due_date,
-                    'note' => $document->note,
-                ];
-            });
+            ->map(fn (Document $document) => $this->toReminderArray($document, 'document'));
 
         $reminders = $assetReminders
             ->concat($documentReminders)
             ->sortBy(fn ($item) => optional($item['due_date'])->timestamp ?? PHP_INT_MAX)
-            ->take(5)
             ->values();
 
         return view('dashboard', [
@@ -64,5 +47,18 @@ class DashboardController extends Controller
             'assetsOverview' => $assetsOverview,
             'reminders' => $reminders,
         ]);
+    }
+
+    private function toReminderArray(Model $model, string $type): array
+    {
+        return [
+            'type' => $type,
+            'title' => $type === 'asset' ? $model->name : $model->name,
+            'category' => $model->category,
+            'status' => $model->computed_status,
+            'days_until_due_label' => $model->days_until_due_label,
+            'due_date' => $model->due_date,
+            'note' => $model->note,
+        ];
     }
 }

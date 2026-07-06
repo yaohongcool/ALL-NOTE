@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Asset;
 
+use App\Enums\AssetCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,7 +15,7 @@ class StoreAssetRequest extends FormRequest
 
     public function rules(): array
     {
-        $categories = ['物理设备', '云服务器', '域名'];
+        $categories = AssetCategory::values();
         $category = $this->input('category');
 
         $rules = [
@@ -24,7 +25,7 @@ class StoreAssetRequest extends FormRequest
             'note' => ['nullable', 'string'],
         ];
 
-        if ($category === '物理设备') {
+        if ($category === AssetCategory::Physical->value) {
             $rules['cpu_model'] = ['nullable', 'string', 'max:100'];
             $rules['gpu_model'] = ['nullable', 'string', 'max:100'];
             $rules['memory'] = ['nullable', 'string', 'max:100'];
@@ -33,7 +34,7 @@ class StoreAssetRequest extends FormRequest
             $rules['storage_3'] = ['nullable', 'string', 'max:100'];
         }
 
-        if ($category === '云服务器') {
+        if ($category === AssetCategory::Server->value) {
             $rules['due_date'] = ['required', 'date'];
             $rules['cpu_cores'] = ['nullable', 'string', Rule::in(['2', '4', '8', '16'])];
             $rules['memory_size'] = ['nullable', 'string', Rule::in(['2GB', '4GB', '8GB', '16GB'])];
@@ -42,7 +43,7 @@ class StoreAssetRequest extends FormRequest
             $rules['provider'] = ['nullable', 'string', 'max:100'];
         }
 
-        if ($category === '域名') {
+        if ($category === AssetCategory::Domain->value) {
             $rules['due_date'] = ['required', 'date'];
             $rules['domain_address'] = ['required', 'string', 'max:150'];
         }

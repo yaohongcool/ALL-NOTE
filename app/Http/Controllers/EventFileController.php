@@ -20,11 +20,13 @@ class EventFileController extends Controller
     {
         $this->authorizeFile($eventFile);
 
+        $isImage = str_starts_with((string) $eventFile->mime_type, 'image/');
+
         return Storage::disk($eventFile->disk)->response(
             $eventFile->path,
             $eventFile->original_name,
-            $this->headers($eventFile),
-            'inline'
+            $this->headers($eventFile, $isImage ? 'inline' : 'attachment'),
+            $isImage ? 'inline' : 'attachment'
         );
     }
 
@@ -35,7 +37,7 @@ class EventFileController extends Controller
         return Storage::disk($eventFile->disk)->download(
             $eventFile->path,
             $eventFile->original_name,
-            $this->headers($eventFile)
+            $this->headers($eventFile, 'attachment')
         );
     }
 
@@ -64,10 +66,14 @@ class EventFileController extends Controller
     /**
      * @return array<string, string>
      */
-    protected function headers(EventFile $eventFile): array
+    protected function headers(EventFile $eventFile, string $disposition = 'inline'): array
     {
-        return array_filter([
-            'Content-Type' => $eventFile->mime_type,
-        ]);
+        $headers = ['Content-Type' => $eventFile->mime_type ?: 'application/octet-stream'];
+
+        if ($disposition === 'attachment') {
+            $headers['Content-Disposition'] = 'attachment; filename="' . addcslashes($eventFile->original_name, '"') . '"';
+        }
+
+        return array_filter($headers);
     }
 }

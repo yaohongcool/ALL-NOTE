@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Event\StoreEventRequest;
 use App\Http\Requests\Event\UpdateEventRequest;
 use App\Models\Event;
-use App\Models\EventFile;
 use App\Models\EventRecord;
 use App\Models\User;
-use App\Services\EventContentService;
 use App\Services\EventFileService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +17,6 @@ class EventController extends Controller
 {
     public function __construct(
         protected EventFileService $eventFileService,
-        protected EventContentService $eventContentService
     ) {
     }
 
@@ -28,10 +25,11 @@ class EventController extends Controller
         $user = auth()->user();
 
         $events = $user->events()
+            ->select(['id', 'user_id', 'title', 'status', 'subject', 'occurred_on', 'visibility', 'created_at', 'updated_at'])
             ->with(['tags', 'summaryRecord'])
             ->withCount('records')
-            ->orderByDesc('created_at')
-            ->orderByDesc('id')
+            ->latest('created_at')
+            ->latest('id')
             ->paginate(10);
 
         return view('events.index', [
@@ -77,14 +75,7 @@ class EventController extends Controller
             ]);
 
             $event->tags()->sync($this->resolveTagIds($user, $data['event_tag_ids'] ?? [], $data['new_event_tags'] ?? null));
-            $fileIdByKey = $this->eventFileService->storeRecordUploads($event, $record, $user, $request);
-
-            $record->update([
-                'process' => $this->eventContentService->replaceUploadKeys($data['process'] ?? null, $fileIdByKey[EventFile::CONTEXT_PROCESS] ?? []),
-                'result' => $this->eventContentService->replaceUploadKeys($data['result'] ?? null, $fileIdByKey[EventFile::CONTEXT_RESULT] ?? []),
-            ]);
-
-            $this->eventFileService->deleteUnreferencedInlineFiles($record->fresh(['files']));
+            $this->eventFileService->saveRecordWithFiles($event, $record, $user, $request, $data);
 
             return $event;
         });

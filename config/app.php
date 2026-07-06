@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'display_timezone' => env('APP_DISPLAY_TIMEZONE', 'Asia/Shanghai'),
+
 ];

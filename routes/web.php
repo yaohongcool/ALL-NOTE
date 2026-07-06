@@ -17,12 +17,18 @@ Route::middleware('guest')->group(function () {
     })->name('home');
 
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
+    Route::post('/login', [AuthController::class, 'login'])
+        ->middleware('throttle:5,1')
+        ->name('login.attempt');
     Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('password.change');
-    Route::post('/change-password', [AuthController::class, 'changePassword'])->name('password.change.update');
+    Route::post('/change-password', [AuthController::class, 'changePassword'])
+        ->middleware('throttle:5,1')
+        ->name('password.change.update');
 
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.store');
+    Route::post('/register', [AuthController::class, 'register'])
+        ->middleware('throttle:5,1')
+        ->name('register.store');
 });
 
 Route::middleware('auth')->group(function () {
@@ -35,7 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/passwords/{password}/edit', [PasswordController::class, 'edit'])->name('passwords.edit');
     Route::put('/passwords/{password}', [PasswordController::class, 'update'])->name('passwords.update');
     Route::delete('/passwords/{password}', [PasswordController::class, 'destroy'])->name('passwords.destroy');
-    Route::post('/passwords/{password}/reveal', [PasswordController::class, 'reveal'])->name('passwords.reveal');
+    Route::post('/passwords/{password}/reveal', [PasswordController::class, 'reveal'])
+        ->middleware('throttle:30,1')
+        ->name('passwords.reveal');
 
     Route::get('/assets', [AssetController::class, 'index'])->name('assets.index');
     Route::get('/assets/create', [AssetController::class, 'create'])->name('assets.create');

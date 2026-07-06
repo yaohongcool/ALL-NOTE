@@ -48,18 +48,9 @@ class User extends Authenticatable
         return $this->hasMany(Event::class);
     }
 
-    public function eventRecords(): HasMany
-    {
-        return $this->hasMany(EventRecord::class);
-    }
-
     public function eventTags(): HasMany
     {
         return $this->hasMany(EventTag::class);
     }
 
-    public function eventFiles(): HasMany
-    {
-        return $this->hasMany(EventFile::class);
-    }
 }

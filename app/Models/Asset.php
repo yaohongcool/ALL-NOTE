@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\AssetCategory;
+use App\Enums\ExpiryStatus;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Asset extends Model
 {
-    use HasFactory;
 
     protected $fillable = [
         'user_id',
@@ -49,7 +49,7 @@ class Asset extends Model
     public function getSummaryAttribute(): string
     {
         return match ($this->category) {
-            '物理设备' => trim(collect([
+            AssetCategory::Physical->value => trim(collect([
                 $this->getDetail('cpu_model'),
                 $this->getDetail('gpu_model'),
                 $this->getDetail('memory') ? $this->getDetail('memory') . 'GB' : null,
@@ -57,12 +57,12 @@ class Asset extends Model
                 $this->getDetail('storage_2') ?  $this->getDetail('storage_2') . 'TB' : null,
                 $this->getDetail('storage_3') ?  $this->getDetail('storage_3') . 'TB' : null,
             ])->filter()->implode(' / ')),
-            '云服务器' => trim(collect([
+            AssetCategory::Server->value => trim(collect([
                 $this->getDetail('ip_address'),
                 $this->getDetail('operating_system'),
                 $this->getDetail('provider'),
             ])->filter()->implode(' / ')),
-            '域名' => (string) $this->getDetail('domain_address', ''),
+            AssetCategory::Domain->value => (string) $this->getDetail('domain_address', ''),
             default => '',
         };
     }
@@ -72,18 +72,18 @@ class Asset extends Model
         $days = $this->days_until_due;
 
         if ($days === null) {
-            return '正常';
+            return ExpiryStatus::Normal->value;
         }
 
         if ($days < 0) {
-            return '已过期';
+            return ExpiryStatus::Expired->value;
         }
 
         if ($days <= 60) {
-            return '即将到期';
+            return ExpiryStatus::Expiring->value;
         }
 
-        return '正常';
+        return ExpiryStatus::Normal->value;
     }
 
     public function getDaysUntilDueAttribute(): ?int
@@ -92,8 +92,9 @@ class Asset extends Model
             return null;
         }
 
-        $today = Carbon::today('Asia/Shanghai');
-        $dueDate = Carbon::parse($this->due_date->format('Y-m-d'), 'Asia/Shanghai')->startOfDay();
+        $tz = config('app.display_timezone', 'Asia/Shanghai');
+        $today = Carbon::today($tz);
+        $dueDate = Carbon::parse($this->due_date->format('Y-m-d'), $tz)->startOfDay();
 
         return (int) $today->diffInDays($dueDate, false);
     }

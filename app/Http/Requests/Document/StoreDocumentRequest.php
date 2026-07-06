@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Document;
 
+use App\Enums\DocumentCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,7 +17,7 @@ class StoreDocumentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:100'],
-            'category' => ['required', 'string', Rule::in(['证件', '会员', '物品', '其它'])],
+            'category' => ['required', 'string', Rule::in(DocumentCategory::values())],
             'due_date' => ['nullable', 'date'],
             'note' => ['nullable', 'string'],
         ];

@@ -79,7 +79,7 @@
             href="{{ route('events.show', $event) }}"
             class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
         >
-            返回事件
+            返回事件记录
         </a>
     </div>
 </form>

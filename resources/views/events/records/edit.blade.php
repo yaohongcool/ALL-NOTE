@@ -4,7 +4,7 @@
     'headerTxt' => '更新处理过程、结果、标签和文件',
     'breadcrumb' => [
         ['label' => '首页', 'url' => route('dashboard')],
-        ['label' => '事件管理', 'url' => route('events.index')],
+        ['label' => '事件记录', 'url' => route('events.index')],
         ['label' => $event->title, 'url' => route('events.show', $event)],
         ['label' => '编辑处理记录'],
     ],

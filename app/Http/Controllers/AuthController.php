@@ -112,7 +112,7 @@ class AuthController extends Controller
         $user = DB::transaction(function () use ($data) {
             $user = \App\Models\User::create([
                 'username' => $data['username'],
-                'password' => Hash::make($data['password']),
+                'password' => $data['password'],
             ]);
 
             $this->userBootstrapService->bootstrap($user);

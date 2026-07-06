@@ -8,6 +8,7 @@ use App\Models\EventRecord;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -15,8 +16,22 @@ use RuntimeException;
 class EventFileService
 {
     public function __construct(
-        protected EventContentService $eventContentService
+        protected EventContentService $contentService
     ) {
+    }
+
+    public function saveRecordWithFiles(Event $event, EventRecord $record, User $user, \Illuminate\Http\Request $request, array $data): array
+    {
+        $fileIdByKey = $this->storeRecordUploads($event, $record, $user, $request);
+
+        $record->update([
+            'process' => $this->contentService->replaceUploadKeys($data['process'] ?? null, $fileIdByKey[EventFile::CONTEXT_PROCESS] ?? []),
+            'result' => $this->contentService->replaceUploadKeys($data['result'] ?? null, $fileIdByKey[EventFile::CONTEXT_RESULT] ?? []),
+        ]);
+
+        $this->deleteUnreferencedInlineFiles($record->fresh(['files']));
+
+        return $fileIdByKey;
     }
 
     public function storeRecordUploads(Event $event, EventRecord $record, User $user, Request $request): array
@@ -57,7 +72,10 @@ class EventFileService
 
     public function delete(EventFile $file): void
     {
-        Storage::disk($file->disk)->delete($file->path);
+        $deleted = Storage::disk($file->disk)->delete($file->path);
+        if (! $deleted && Storage::disk($file->disk)->exists($file->path)) {
+            Log::warning('事件文件物理删除失败', ['file_id' => $file->id, 'disk' => $file->disk, 'path' => $file->path]);
+        }
         $file->delete();
     }
 
@@ -78,7 +96,7 @@ class EventFileService
                 'user_id' => $user->id,
                 'usage' => $usage,
                 'context' => $context,
-                'disk' => 'local',
+                'disk' => config('filesystems.default', 'local'),
                 'path' => $path,
                 'original_name' => $file->getClientOriginalName(),
                 'mime_type' => $file->getMimeType(),
@@ -96,8 +114,8 @@ class EventFileService
 
     public function deleteUnreferencedInlineFiles(EventRecord $record): void
     {
-        $referencedFileIds = collect($this->eventContentService->referencedFileIds($record->process))
-            ->merge($this->eventContentService->referencedFileIds($record->result))
+        $referencedFileIds = collect($this->contentService->referencedFileIds($record->process))
+            ->merge($this->contentService->referencedFileIds($record->result))
             ->unique()
             ->values();
 
@@ -113,7 +131,7 @@ class EventFileService
         $extension = $file->guessExtension() ?: $file->getClientOriginalExtension() ?: 'bin';
         $filename = (string) Str::uuid() . '.' . strtolower($extension);
         $directory = 'event-files/' . $event->user_id . '/' . $event->id;
-        $path = $file->storeAs($directory, $filename, 'local');
+        $path = $file->storeAs($directory, $filename, config('filesystems.default', 'local'));
 
         if (! $path) {
             throw new RuntimeException('事件文件保存失败。');

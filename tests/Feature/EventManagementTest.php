@@ -187,9 +187,16 @@ class EventManagementTest extends TestCase
             ->assertSee('<strong>登录失败</strong>', false)
             ->assertSee('<code>ssh</code>', false)
             ->assertSee('<table>', false)
-            ->assertDontSee('## 排查结果')
-            ->assertDontSee('<script', false)
-            ->assertDontSee('href="javascript:alert(1)"', false);
+            ->assertDontSee('## 排查结果');
+
+        $record = $event->records()->with('files')->first();
+        $rendered = app(\App\Services\EventContentService::class)
+            ->renderDisplay($record->process, $record, 'process')
+            ->toHtml();
+
+        $this->assertStringNotContainsString('<script', $rendered);
+        $this->assertStringNotContainsString('onerror=', $rendered);
+        $this->assertStringNotContainsString('javascript:', $rendered);
     }
 
     public function test_event_forms_only_show_event_tags_and_support_paste_handlers(): void
@@ -335,13 +342,18 @@ class EventManagementTest extends TestCase
         $tag = $user->eventTags()->create(['name' => '移动端标签']);
         $event->tags()->sync([$tag->id]);
 
-        foreach ([route('dashboard'), route('events.index'), route('passwords.index'), route('assets.index'), route('documents.index')] as $route) {
+        foreach ([route('events.index'), route('passwords.index'), route('assets.index'), route('documents.index')] as $route) {
             $this->actingAs($user)->get($route)
                 ->assertOk()
                 ->assertSee('responsive-table-wrap', false)
                 ->assertSee('responsive-table', false)
                 ->assertSee('data-label="操作"', false);
         }
+
+        $this->actingAs($user)->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('responsive-table-wrap', false)
+            ->assertSee('data-label="距离到期"', false);
 
         $this->actingAs($user)->get(route('events.index'))
             ->assertOk()
@@ -589,5 +601,128 @@ class EventManagementTest extends TestCase
 
         $this->assertDatabaseMissing('event_records', ['id' => $record->id]);
         $this->assertSame(0, EventFile::count());
+    }
+
+    public function test_other_user_cannot_update_or_delete_public_event(): void
+    {
+        $owner = User::create(['username' => 'event-isolate-owner', 'password' => Hash::make('Password@123')]);
+        $other = User::create(['username' => 'event-isolate-other', 'password' => Hash::make('Password@123')]);
+        $event = $owner->events()->create([
+            'title' => '公开事件',
+            'status' => Event::STATUS_PROCESSED,
+            'visibility' => Event::VISIBILITY_PUBLIC,
+        ]);
+
+        $this->actingAs($other)
+            ->putJson(route('events.update', $event), [
+                'title' => '篡改标题',
+                'status' => Event::STATUS_PENDING,
+                'visibility' => Event::VISIBILITY_PUBLIC,
+            ])
+            ->assertForbidden();
+
+        $this->actingAs($other)
+            ->deleteJson(route('events.destroy', $event))
+            ->assertForbidden();
+    }
+
+    public function test_non_owner_cannot_create_record_for_others_event(): void
+    {
+        $owner = User::create(['username' => 'event-rec-owner', 'password' => Hash::make('Password@123')]);
+        $other = User::create(['username' => 'event-rec-other', 'password' => Hash::make('Password@123')]);
+        $event = $owner->events()->create([
+            'title' => '私有事件',
+            'status' => Event::STATUS_PROCESSING,
+            'visibility' => Event::VISIBILITY_PRIVATE,
+        ]);
+
+        $this->actingAs($other)
+            ->postJson(route('event-records.store', $event), [
+                'process' => '非 owner 的过程',
+                'result' => '非 owner 的结果',
+                'status' => Event::STATUS_PROCESSED,
+                'visibility' => Event::VISIBILITY_PRIVATE,
+            ])
+            ->assertForbidden();
+    }
+
+    public function test_event_owner_cannot_edit_record_they_did_not_create(): void
+    {
+        $owner = User::create(['username' => 'event-rec-owner2', 'password' => Hash::make('Password@123')]);
+        $recorder = User::create(['username' => 'event-rec-recorder', 'password' => Hash::make('Password@123')]);
+        $event = $owner->events()->create([
+            'title' => '多用户事件',
+            'status' => Event::STATUS_PROCESSING,
+            'visibility' => Event::VISIBILITY_PRIVATE,
+        ]);
+        $record = $event->records()->create([
+            'user_id' => $recorder->id,
+            'process' => '记录人创建的过程',
+            'result' => '记录人创建的结果',
+        ]);
+
+        $this->actingAs($owner)
+            ->putJson(route('event-records.update', $record), [
+                'process' => 'event owner 试图改别人的记录',
+                'result' => '不应成功',
+                'status' => Event::STATUS_PROCESSED,
+                'visibility' => Event::VISIBILITY_PRIVATE,
+            ])
+            ->assertForbidden();
+    }
+
+    public function test_inline_image_cannot_be_deleted_via_destroy_route(): void
+    {
+        $user = User::create(['username' => 'event-file-user', 'password' => Hash::make('Password@123')]);
+        $event = $user->events()->create([
+            'title' => '文件测试',
+            'status' => Event::STATUS_PROCESSED,
+            'visibility' => Event::VISIBILITY_PRIVATE,
+        ]);
+        $record = $event->records()->create(['user_id' => $user->id, 'process' => null, 'result' => null]);
+
+        $file = EventFile::create([
+            'event_id' => $event->id,
+            'event_record_id' => $record->id,
+            'user_id' => $user->id,
+            'usage' => EventFile::USAGE_INLINE,
+            'context' => EventFile::CONTEXT_PROCESS,
+            'disk' => 'local',
+            'path' => 'test/inline.png',
+            'original_name' => 'test.png',
+            'mime_type' => 'image/png',
+            'size' => 1024,
+        ]);
+
+        $this->actingAs($user)
+            ->deleteJson(route('event-files.destroy', $file))
+            ->assertForbidden();
+    }
+
+    public function test_dashboard_data_is_user_isolated(): void
+    {
+        $userA = User::create(['username' => 'dashboard-a', 'password' => Hash::make('Password@123')]);
+        $userB = User::create(['username' => 'dashboard-b', 'password' => Hash::make('Password@123')]);
+
+        $userA->passwords()->create([
+            'name' => 'A 的密码', 'account' => 'a@a.com', 'encrypted_password' => 'enc',
+        ]);
+        $userA->assets()->create([
+            'category' => '物理设备', 'name' => 'A 的资产', 'status' => '正常', 'due_date' => null, 'details_json' => [], 'note' => null,
+        ]);
+        $userB->passwords()->create([
+            'name' => 'B 的密码', 'account' => 'b@b.com', 'encrypted_password' => 'enc',
+        ]);
+        $userB->assets()->create([
+            'category' => '物理设备', 'name' => 'B 的资产', 'status' => '正常', 'due_date' => null, 'details_json' => [], 'note' => null,
+        ]);
+
+        $response = $this->actingAs($userA)->get(route('dashboard'))->assertOk();
+        $response->assertSee('A 的资产');
+        $response->assertDontSee('B 的资产');
+
+        $response = $this->actingAs($userB)->get(route('dashboard'))->assertOk();
+        $response->assertSee('B 的资产');
+        $response->assertDontSee('A 的资产');
     }
 }
