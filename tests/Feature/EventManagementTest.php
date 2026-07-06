@@ -275,7 +275,7 @@ class EventManagementTest extends TestCase
 
         $this->actingAs($user)->get(route('events.index'))
             ->assertOk()
-            ->assertSeeInOrder(['记录数', '内容', '可见性', '操作'])
+            ->assertSeeInOrder(['记录数', '内容', '操作'])
             ->assertSee('编辑')
             ->assertDontSee('查看')
             ->assertSee(route('events.show', $event), false)
@@ -347,56 +347,7 @@ class EventManagementTest extends TestCase
             ->assertOk()
             ->assertSee('data-label="标题"', false)
             ->assertSee('data-label="内容"', false)
-            ->assertSee('data-label="可见性"', false)
-            ->assertDontSee('可见性（未实装功能）');
-    }
-
-    public function test_dashboard_shows_recent_five_created_events(): void
-    {
-        $user = User::create([
-            'username' => 'dashboard-user',
-            'password' => Hash::make('Password@123'),
-        ]);
-
-        foreach (range(1, 6) as $index) {
-            $event = $user->events()->create([
-                'title' => '首页事件 ' . $index,
-                'status' => Event::STATUS_PROCESSED,
-                'subject' => '来源 ' . $index,
-                'occurred_on' => '2026-04-' . str_pad((string) $index, 2, '0', STR_PAD_LEFT),
-                'visibility' => Event::VISIBILITY_PRIVATE,
-            ]);
-
-            if ($index === 6) {
-                $tag = $user->eventTags()->create([
-                    'name' => '首页标签',
-                ]);
-                $event->tags()->sync([$tag->id]);
-                $event->records()->create([
-                    'user_id' => $user->id,
-                    'process' => '首页事件过程',
-                    'result' => '首页事件结果',
-                ]);
-            }
-        }
-
-        $this->actingAs($user)->get(route('dashboard'))
-            ->assertOk()
-            ->assertSee('事件一览')
-            ->assertSeeInOrder(['标题', '状态', '来源/对象', '发生日期', '标签', '记录数', '内容', '可见性'])
-            ->assertSee('cursor-pointer', false)
-            ->assertSee('onclick="window.location=\'', false)
-            ->assertSee('首页事件 6')
-            ->assertSee('来源 6')
-            ->assertSee('2026-04-06')
-            ->assertSee('首页标签')
-            ->assertSee('首页事件过程...')
-            ->assertSee('仅自己可见')
-            ->assertSee('首页事件 5')
-            ->assertSee('首页事件 4')
-            ->assertSee('首页事件 3')
-            ->assertSee('首页事件 2')
-            ->assertDontSee('首页事件 1');
+            ->assertDontSee('可见性');
     }
 
     public function test_dashboard_expiry_reminders_show_first_five_due_items(): void

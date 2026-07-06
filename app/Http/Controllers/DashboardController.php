@@ -16,14 +16,6 @@ class DashboardController extends Controller
             ->oldest('updated_at')
             ->get();
 
-        $recentEvents = $user->events()
-            ->with(['tags', 'summaryRecord'])
-            ->withCount('records')
-            ->latest('created_at')
-            ->latest('id')
-            ->limit(5)
-            ->get();
-
         $assetReminders = $user->assets()
             ->whereNotNull('due_date')
             ->orderBy('due_date')
@@ -70,7 +62,6 @@ class DashboardController extends Controller
                 'events_count' => $user->events()->count(),
             ],
             'assetsOverview' => $assetsOverview,
-            'recentEvents' => $recentEvents,
             'reminders' => $reminders,
         ]);
     }

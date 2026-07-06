@@ -35,7 +35,6 @@
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">标签</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">记录数</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">内容</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">可见性（后期推出共享功能）</th>
                             <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">操作</th>
                         </tr>
                     </thead>
@@ -50,9 +49,6 @@
                                     default => 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
                                 };
 
-                                $visibilityClass = $event->visibility === 'public'
-                                    ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300'
-                                    : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
                             @endphp
                             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                                 <td data-label="标题" class="px-4 py-4 align-middle">
@@ -109,12 +105,6 @@
                                     </span>
                                 </td>
 
-                                <td data-label="可见性（后期推出共享功能）" class="px-4 py-4 align-middle">
-                                    <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ $visibilityClass }}">
-                                        {{ $event->visibility_label }}
-                                    </span>
-                                </td>
-
                                 <td data-label="操作" class="px-4 py-4 align-middle">
                                     <div class="flex justify-end gap-2">
                                         <a
@@ -139,7 +129,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="px-4 py-10 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
+                                <td colspan="8" class="px-4 py-10 text-center align-middle text-sm text-slate-500 dark:text-slate-400">
                                     暂无事件记录，点击“添加事件”开始创建。
                                 </td>
                             </tr>
