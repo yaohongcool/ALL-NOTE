@@ -82,4 +82,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(FundSkinEarning::class);
     }
+
+    public function fundEarningPeriods(): HasMany
+    {
+        return $this->hasMany(FundEarningPeriod::class);
+    }
 }

@@ -11,7 +11,7 @@
         <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <p class="text-sm font-medium text-slate-500 dark:text-slate-400">总资产金额</p>
-                <p class="mt-3 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                <p class="mt-3 text-3xl font-bold tracking-tight" style="color: #ef921c">
                     ¥{{ number_format($fundTotalAssets ?? 0, 2) }}
                 </p>
             </div>

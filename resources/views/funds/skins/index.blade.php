@@ -26,6 +26,7 @@
                     <thead class="bg-slate-50 dark:bg-slate-800/60">
                         <tr>
                             <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">名称</th>
+                            <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">购入时间</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">购入价</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">uu价值</th>
                             <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">uu售出收益</th>
@@ -56,6 +57,9 @@
                                 <td data-label="名称" class="px-3 py-4 align-middle">
                                     <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ $skin->name }}</span>
                                 </td>
+                                <td data-label="购入时间" class="px-3 py-4 align-middle">
+                                    <span class="text-sm text-slate-600 dark:text-slate-300">{{ $skin->purchased_at ? $skin->purchased_at->format('Y-m-d') : '-' }}</span>
+                                </td>
                                 <td data-label="购入价" class="px-3 py-4 align-middle">
                                     <span class="text-sm text-slate-600 dark:text-slate-300">¥{{ number_format($skin->cost, 2) }}</span>
                                 </td>
@@ -72,10 +76,10 @@
                                     <span class="text-sm {{ $buffSale >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">¥{{ number_format($buffSale, 2) }}</span>
                                 </td>
                                 <td data-label="择优收益" class="px-3 py-4 align-middle">
-                                    <span class="text-sm font-semibold text-blue-600 dark:text-blue-400">¥{{ number_format($bestProfit, 2) }}</span>
+                                    <span class="text-sm font-semibold {{ $bestProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">¥{{ number_format($bestProfit, 2) }}</span>
                                 </td>
                                 <td data-label="估值" class="px-3 py-4 align-middle">
-                                    <span class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">¥{{ number_format($valuation, 2) }}</span>
+                                    <span class="text-sm font-semibold text-purple-600 dark:text-purple-400">¥{{ number_format($valuation, 2) }}</span>
                                 </td>
                                 <td data-label="租金" class="px-3 py-4 align-middle">
                                     <span class="text-sm text-slate-600 dark:text-slate-300">¥{{ number_format($rent, 2) }}</span>
@@ -98,7 +102,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <x-empty-row :colspan="13" message="暂无一览表数据，请先添加虚拟资产。" />
+                            <x-empty-row :colspan="14" message="暂无一览表数据，请先添加虚拟资产。" />
                         @endforelse
                     </tbody>
                 </table>
@@ -119,7 +123,7 @@
             </div>
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <p class="text-sm font-medium text-slate-500 dark:text-slate-400">合计估值</p>
-                <p class="mt-2 text-2xl font-bold text-indigo-600 dark:text-indigo-400">¥{{ number_format($totalValuation ?? 0, 2) }}</p>
+                <p class="mt-2 text-2xl font-bold text-purple-600 dark:text-purple-400">¥{{ number_format($totalValuation ?? 0, 2) }}</p>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <p class="text-sm font-medium text-slate-500 dark:text-slate-400">合计择优收益</p>

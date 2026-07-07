@@ -53,6 +53,7 @@ class FundSkinController extends Controller
 
         auth()->user()->fundSkins()->create([
             'name' => $data['name'],
+            'purchased_at' => $data['purchased_at'] ?? null,
             'cost' => $data['cost'],
             'uu_price' => $data['uu_price'] ?? null,
             'uu_fee_rate' => $data['uu_fee_rate'] ?? 0.02,
@@ -83,6 +84,7 @@ class FundSkinController extends Controller
 
         $skin->update([
             'name' => $data['name'],
+            'purchased_at' => $data['purchased_at'] ?? null,
             'cost' => $data['cost'],
             'uu_price' => $data['uu_price'] ?? null,
             'uu_fee_rate' => $data['uu_fee_rate'] ?? 0.02,

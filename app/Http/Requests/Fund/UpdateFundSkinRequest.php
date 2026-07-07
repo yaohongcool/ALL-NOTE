@@ -15,6 +15,7 @@ class UpdateFundSkinRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:100'],
+            'purchased_at' => ['nullable', 'date'],
             'cost' => ['required', 'numeric', 'min:0'],
             'uu_price' => ['nullable', 'numeric'],
             'buff_price' => ['nullable', 'numeric'],

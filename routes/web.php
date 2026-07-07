@@ -12,6 +12,7 @@ use App\Http\Controllers\FundController;
 use App\Http\Controllers\FundAccountController;
 use App\Http\Controllers\FundBudgetController;
 use App\Http\Controllers\FundChartController;
+use App\Http\Controllers\FundEarningPeriodController;
 use App\Http\Controllers\FundMonthlyController;
 use App\Http\Controllers\FundRentalController;
 use App\Http\Controllers\FundSkinController;
@@ -88,6 +89,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/funds', [FundController::class, 'index'])->name('funds.index');
     Route::get('/funds/statistics', [FundController::class, 'statistics'])->name('funds.statistics');
     Route::get('/funds/historical-earnings', [FundController::class, 'historicalEarnings'])->name('funds.historical-earnings');
+    Route::get('/funds/historical-earnings/data', [FundEarningPeriodController::class, 'index'])->name('funds.historical-earnings.data');
+    Route::post('/funds/historical-earnings/periods', [FundEarningPeriodController::class, 'store'])->name('funds.historical-earnings.periods.store');
+    Route::put('/funds/historical-earnings/periods/{period}', [FundEarningPeriodController::class, 'update'])->name('funds.historical-earnings.periods.update');
+    Route::delete('/funds/historical-earnings/periods/{period}', [FundEarningPeriodController::class, 'destroy'])->name('funds.historical-earnings.periods.destroy');
     Route::get('/funds/chart-data', [FundChartController::class, 'chartData'])->name('funds.chart-data');
     Route::resource('funds/accounts', FundAccountController::class)->names(['index' => 'funds.accounts.index', 'create' => 'funds.accounts.create', 'store' => 'funds.accounts.store', 'edit' => 'funds.accounts.edit', 'update' => 'funds.accounts.update', 'destroy' => 'funds.accounts.destroy']);
     Route::resource('funds/budgets', FundBudgetController::class)->names(['index' => 'funds.budgets.index', 'create' => 'funds.budgets.create', 'store' => 'funds.budgets.store', 'edit' => 'funds.budgets.edit', 'update' => 'funds.budgets.update', 'destroy' => 'funds.budgets.destroy']);

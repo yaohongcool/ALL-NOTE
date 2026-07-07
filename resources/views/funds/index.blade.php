@@ -14,7 +14,7 @@
         <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <p class="text-sm font-medium text-slate-500 dark:text-slate-400">总资产金额</p>
-                <p class="mt-3 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                <p class="mt-3 text-3xl font-bold tracking-tight" style="color: #ef921c">
                     ¥{{ number_format($totalAssets ?? 0, 2) }}
                 </p>
             </div>
@@ -112,7 +112,7 @@
                         </div>
                         <div class="rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
                             <p class="text-xs text-slate-500 dark:text-slate-400">总估值</p>
-                            <p class="mt-1 text-lg font-bold text-indigo-600 dark:text-indigo-400">¥{{ number_format($totalSkinValuation ?? 0, 2) }}</p>
+                            <p class="mt-1 text-lg font-bold text-purple-600 dark:text-purple-400">¥{{ number_format($totalSkinValuation ?? 0, 2) }}</p>
                         </div>
                     </div>
                     @endif
@@ -121,7 +121,7 @@
                         <span class="text-slate-400">&rarr;</span>
                     </a>
                     <a href="{{ route('funds.historical-earnings') }}" class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
-                        <span class="text-sm font-medium text-slate-700 dark:text-slate-200">历史收益</span>
+                        <span class="text-sm font-medium text-slate-700 dark:text-slate-200">累计收益</span>
                         <span class="text-slate-400">&rarr;</span>
                     </a>
                 </div>

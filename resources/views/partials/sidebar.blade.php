@@ -31,6 +31,13 @@
             </p>
             <div class="space-y-1">
                 <a
+                    href="{{ route('funds.index') }}"
+                    class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100 {{ request()->routeIs('funds.*') ? 'bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300' }}"
+                >
+                    <span>资金记录</span>
+                </a>
+
+                <a
                     href="{{ route('passwords.index') }}"
                     class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100 {{ request()->routeIs('passwords.*') ? 'bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300' }}"
                 >
@@ -56,13 +63,6 @@
                     class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100 {{ request()->routeIs('events.*') ? 'bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300' }}"
                 >
                     <span>事件记录</span>
-                </a>
-
-                <a
-                    href="{{ route('funds.index') }}"
-                    class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100 {{ request()->routeIs('funds.*') ? 'bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300' }}"
-                >
-                    <span>资金记录</span>
                 </a>
             </div>
         </div>

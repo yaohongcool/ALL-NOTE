@@ -1,13 +1,13 @@
 @extends('layouts.app', [
-    'title' => '历史收益 - 全录笔记',
-    'headerTitle' => '历史收益',
-    'headerTxt' => '管理虚拟资产历史收益记录',
+    'title' => '累计收益 - 全录笔记',
+    'headerTitle' => '累计收益',
+    'headerTxt' => '管理虚拟资产累计收益记录',
     'breadcrumb' => [
         ['label' => '首页', 'url' => route('dashboard')],
         ['label' => '资金记录', 'url' => route('funds.index')],
         ['label' => '虚拟资产', 'url' => route('funds.skins.index')],
         ['label' => $skin->name, 'url' => route('funds.skins.edit', $skin)],
-        ['label' => '历史收益'],
+        ['label' => '累计收益'],
     ],
 ])
 
@@ -54,7 +54,7 @@
                             </td>
                         </tr>
                     @empty
-                        <x-empty-row :colspan="4" message="暂无历史收益记录" />
+                        <x-empty-row :colspan="4" message="暂无累计收益记录" />
                     @endforelse
                 </tbody>
             </table>
