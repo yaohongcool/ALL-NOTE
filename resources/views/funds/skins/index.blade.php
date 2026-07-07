@@ -55,7 +55,7 @@
                             @endphp
                             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                                 <td data-label="名称" class="px-3 py-4 align-middle">
-                                    <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ $skin->name }}</span>
+                                    <span class="text-sm font-semibold text-purple-600 dark:text-purple-400">{{ $skin->name }}</span>
                                 </td>
                                 <td data-label="购入时间" class="px-3 py-4 align-middle">
                                     <span class="text-sm text-slate-600 dark:text-slate-300">{{ $skin->purchased_at ? $skin->purchased_at->format('Y-m-d') : '-' }}</span>

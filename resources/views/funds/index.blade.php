@@ -105,7 +105,7 @@
 
                 <div class="space-y-3">
                     @if(isset($skins) && $skins->isNotEmpty())
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-3 gap-3">
                         <div class="rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
                             <p class="text-xs text-slate-500 dark:text-slate-400">虚拟资产数量</p>
                             <p class="mt-1 text-lg font-bold text-slate-900 dark:text-slate-100">{{ $skins->count() }}</p>
@@ -113,6 +113,10 @@
                         <div class="rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
                             <p class="text-xs text-slate-500 dark:text-slate-400">总估值</p>
                             <p class="mt-1 text-lg font-bold text-purple-600 dark:text-purple-400">¥{{ number_format($totalSkinValuation ?? 0, 2) }}</p>
+                        </div>
+                        <div class="rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
+                            <p class="text-xs text-slate-500 dark:text-slate-400">累计收益</p>
+                            <p class="mt-1 text-lg font-bold text-emerald-600 dark:text-emerald-400">¥{{ number_format($totalCumulativeEarnings ?? 0, 2) }}</p>
                         </div>
                     </div>
                     @endif

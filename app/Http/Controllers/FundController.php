@@ -47,8 +47,10 @@ class FundController extends Controller
             $totalMonthlyProfit += $monthly;
         }
 
+        $totalCumulativeEarnings = $user->fundSkinEarnings()->sum('revenue');
+
         return view('funds.index', [
-            'accounts' => $user->fundAccounts()->orderBy('sort')->get(),
+            'accounts' => $user->fundAccounts()->orderByDesc('balance')->get(),
             'totalAssets' => $user->fundAccounts()->sum('balance') + $totalSkinValuation,
             'skins' => $skins,
             'totalSkinCost' => $totalSkinCost,
@@ -56,6 +58,7 @@ class FundController extends Controller
             'avgGrowth' => $avgGrowth,
             'totalDailyProfit' => $totalDailyProfit,
             'totalMonthlyProfit' => $totalMonthlyProfit,
+            'totalCumulativeEarnings' => $totalCumulativeEarnings,
         ]);
     }
 

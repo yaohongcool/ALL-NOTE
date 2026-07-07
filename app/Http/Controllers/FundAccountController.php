@@ -16,7 +16,7 @@ class FundAccountController extends Controller
 
         $accounts = $user->fundAccounts()
             ->select(['id', 'user_id', 'name', 'balance', 'note', 'created_at', 'updated_at'])
-            ->orderBy('name')
+            ->orderByDesc('balance')
             ->paginate(10);
 
         return view('funds.accounts.index', [
