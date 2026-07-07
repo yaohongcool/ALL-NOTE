@@ -29,6 +29,7 @@
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">类型</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">月金额</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">年金额</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">备注</th>
                             <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">操作</th>
                         </tr>
                     </thead>
@@ -39,11 +40,6 @@
                                     <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">
                                         {{ $budget->name }}
                                     </p>
-                                    @if($budget->note)
-                                        <p class="mt-1 max-w-xs truncate text-xs text-slate-500 dark:text-slate-400">
-                                            {{ $budget->note }}
-                                        </p>
-                                    @endif
                                 </td>
                                 <td data-label="类型" class="px-4 py-4 align-middle">
                                     @php
@@ -64,6 +60,13 @@
                                 <td data-label="年金额" class="px-4 py-4 align-middle">
                                     <span class="text-sm text-slate-600 dark:text-slate-300">¥{{ number_format($budget->annual_amount, 2) }}</span>
                                 </td>
+                                <td data-label="备注" class="px-4 py-4 align-middle">
+                                    @if($budget->note)
+                                        <span class="text-sm text-slate-600 dark:text-slate-300">{{ $budget->note }}</span>
+                                    @else
+                                        <span class="text-sm text-slate-400">-</span>
+                                    @endif
+                                </td>
                                 <td data-label="操作" class="px-4 py-4 align-middle">
                                     <x-row-actions
                                         :editRoute="route('funds.budgets.edit', $budget)"
@@ -73,7 +76,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <x-empty-row :colspan="5" message="暂无预算记录，点击添加预算开始创建。" />
+                            <x-empty-row :colspan="6" message="暂无预算记录，点击添加预算开始创建。" />
                         @endforelse
                     </tbody>
                 </table>

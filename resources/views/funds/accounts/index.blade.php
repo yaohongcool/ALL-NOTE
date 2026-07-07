@@ -26,7 +26,8 @@
                     <thead class="bg-slate-50 dark:bg-slate-800/60">
                         <tr>
                             <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">名称</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">余额</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">金额</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">备注</th>
                             <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">操作</th>
                         </tr>
                     </thead>
@@ -37,14 +38,16 @@
                                     <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">
                                         {{ $account->name }}
                                     </p>
-                                    @if($account->note)
-                                        <p class="mt-1 max-w-xs truncate text-xs text-slate-500 dark:text-slate-400">
-                                            {{ $account->note }}
-                                        </p>
-                                    @endif
                                 </td>
-                                <td data-label="余额" class="px-4 py-4 align-middle">
-                                    <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">¥{{ number_format($account->balance, 2) }}</span>
+                                <td data-label="金额" class="px-4 py-4 align-middle">
+                                    <span class="text-sm font-semibold {{ $account->balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">¥{{ number_format($account->balance, 2) }}</span>
+                                </td>
+                                <td data-label="备注" class="px-4 py-4 align-middle">
+                                    @if($account->note)
+                                        <span class="text-sm text-slate-600 dark:text-slate-300">{{ $account->note }}</span>
+                                    @else
+                                        <span class="text-sm text-slate-400">-</span>
+                                    @endif
                                 </td>
                                 <td data-label="操作" class="px-4 py-4 align-middle">
                                     <x-row-actions
@@ -55,7 +58,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <x-empty-row :colspan="3" message="暂无账户记录，点击添加账户开始创建。" />
+                            <x-empty-row :colspan="4" message="暂无账户记录，点击添加账户开始创建。" />
                         @endforelse
                     </tbody>
                 </table>

@@ -55,18 +55,15 @@ class FundSkinController extends Controller
             'name' => $data['name'],
             'cost' => $data['cost'],
             'uu_price' => $data['uu_price'] ?? null,
+            'uu_fee_rate' => $data['uu_fee_rate'] ?? 0.02,
             'buff_price' => $data['buff_price'] ?? null,
+            'buff_fee_rate' => $data['buff_fee_rate'] ?? 0.025,
             'daily_rental' => $data['daily_rental'] ?? null,
             'note' => $data['note'] ?? null,
         ]);
 
         return redirect()->route('funds.skins.index')
             ->with('success', '虚拟资产记录已创建。');
-    }
-
-    public function show(FundSkin $skin): RedirectResponse
-    {
-        return redirect()->route('funds.skins.index');
     }
 
     public function edit(FundSkin $skin): View
@@ -88,7 +85,9 @@ class FundSkinController extends Controller
             'name' => $data['name'],
             'cost' => $data['cost'],
             'uu_price' => $data['uu_price'] ?? null,
+            'uu_fee_rate' => $data['uu_fee_rate'] ?? 0.02,
             'buff_price' => $data['buff_price'] ?? null,
+            'buff_fee_rate' => $data['buff_fee_rate'] ?? 0.025,
             'daily_rental' => $data['daily_rental'] ?? null,
             'note' => $data['note'] ?? null,
         ]);

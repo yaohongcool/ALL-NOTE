@@ -70,7 +70,7 @@
                                     <span class="inline-block h-2 w-2 rounded-full {{ str_replace(['text-', 'bg-', 'dark:'], '', $color) }}"></span>
                                     <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $account->name }}</span>
                                 </div>
-                                <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">¥{{ number_format($account->balance, 2) }}</span>
+                                <span class="text-sm font-semibold {{ $account->balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">¥{{ number_format($account->balance, 2) }}</span>
                             </div>
                         @endforeach
                     </div>

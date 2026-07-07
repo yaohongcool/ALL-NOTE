@@ -13,7 +13,6 @@ class FundAccount extends Model
         'name',
         'type',
         'balance',
-        'sort',
         'note',
     ];
 

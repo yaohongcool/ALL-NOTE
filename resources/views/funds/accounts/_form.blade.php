@@ -28,7 +28,7 @@
 
         <div>
             <label for="balance" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
-                余额
+                金额
             </label>
             <input
                 id="balance"

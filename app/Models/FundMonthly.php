@@ -11,10 +11,6 @@ class FundMonthly extends Model
         'user_id',
         'month',
         'income',
-        'expense',
-        'savings_target',
-        'savings_actual',
-        'savings_status',
         'note',
     ];
 
@@ -23,9 +19,6 @@ class FundMonthly extends Model
         return [
             'month' => 'date',
             'income' => 'decimal:2',
-            'expense' => 'decimal:2',
-            'savings_target' => 'decimal:2',
-            'savings_actual' => 'decimal:2',
         ];
     }
 

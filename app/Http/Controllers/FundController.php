@@ -61,35 +61,7 @@ class FundController extends Controller
 
     public function historicalEarnings(): View
     {
-        $user = auth()->user();
-        $skins = $user->fundSkins()->orderBy('name')->get();
-
-        $earnings = $user->fundSkinEarnings()
-            ->with('skin')
-            ->orderBy('month')
-            ->get()
-            ->groupBy(fn ($e) => $e->month instanceof \Carbon\Carbon
-                ? $e->month->format('Y-m')
-                : date('Y-m', strtotime($e->month)));
-
-        $earningsByMonth = [];
-        foreach ($earnings as $ym => $items) {
-            $row = ['ym' => $ym, 'items' => []];
-            foreach ($items as $e) {
-                $row['items'][$e->skin_id] = (float) $e->revenue;
-            }
-            $earningsByMonth[] = $row;
-        }
-
-        $totalsBySkin = [];
-        foreach ($skins as $skin) {
-            $totalsBySkin[$skin->id] = 0;
-            foreach ($earningsByMonth as $row) {
-                $totalsBySkin[$skin->id] += $row['items'][$skin->id] ?? 0;
-            }
-        }
-
-        return view('funds.historical_earnings', compact('skins', 'earningsByMonth', 'totalsBySkin'));
+        return view('funds.historical_earnings');
     }
 
     public function statistics(): View

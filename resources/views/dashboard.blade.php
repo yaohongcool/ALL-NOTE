@@ -6,7 +6,39 @@
 
 @section('content')
     <div class="space-y-6">
-        <section class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
+
+        {{-- 资金统计卡片 --}}
+        <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">总资产金额</p>
+                <p class="mt-3 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                    ¥{{ number_format($fundTotalAssets ?? 0, 2) }}
+                </p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">环比增长</p>
+                <p class="mt-3 text-3xl font-bold tracking-tight {{ ($fundAvgGrowth ?? 0) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">
+                    ¥{{ number_format($fundAvgGrowth ?? 0, 2) }}
+                </p>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">近12个月平均月环比增长</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">日均收益</p>
+                <p class="mt-3 text-3xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400">
+                    ¥{{ number_format($fundDailyProfit ?? 0, 2) }}
+                </p>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">虚拟资产日租金收益总和</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">月均收益</p>
+                <p class="mt-3 text-3xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400">
+                    ¥{{ number_format($fundMonthlyProfit ?? 0, 2) }}
+                </p>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">虚拟资产月租金收益总和</p>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-3">
             <x-stat-card
                 title="密码总数"
                 :value="$stats['passwords_count']"
@@ -24,27 +56,11 @@
             />
 
             <x-stat-card
-                title="期限备忘总数"
-                :value="$stats['documents_count']"
-                hint="当前登录用户的期限备忘记录总数"
-                :createUrl="route('documents.create')"
-                :manageUrl="route('documents.index')"
-            />
-
-            <x-stat-card
                 title="事件总数"
                 :value="$stats['events_count']"
                 hint="当前登录用户的事件记录总数"
                 :createUrl="route('events.create')"
                 :manageUrl="route('events.index')"
-            />
-
-            <x-stat-card
-                title="资金总额"
-                :value="'¥' . number_format($stats['fund_total'] ?? 0, 2)"
-                hint="当前总资产"
-                :createUrl="route('funds.accounts.create')"
-                :manageUrl="route('funds.index')"
             />
         </section>
 
