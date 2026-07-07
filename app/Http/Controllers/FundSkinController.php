@@ -19,24 +19,22 @@ class FundSkinController extends Controller
             ->paginate(10);
 
         $totalCost = $skins->sum('cost');
-        $totalUuValuation = $skins->sum('uu_price');
-        $totalBuffValuation = $skins->sum('buff_price');
         $totalProfit = $skins->sum(function (FundSkin $skin) {
-            return ($skin->uu_price ?? 0) - $skin->cost;
+            $uuProfit = ($skin->uu_price * (1 - $skin->uu_fee_rate)) - $skin->cost;
+            $buffProfit = ($skin->buff_price * (1 - $skin->buff_fee_rate)) - $skin->cost;
+            return max($uuProfit, $buffProfit);
         });
 
         $totalValuation = $skins->sum(function (FundSkin $skin) {
             $uuProfit = ($skin->uu_price * (1 - $skin->uu_fee_rate)) - $skin->cost;
             $buffProfit = ($skin->buff_price * (1 - $skin->buff_fee_rate)) - $skin->cost;
             $bestProfit = max($uuProfit, $buffProfit);
-            return max($skin->cost, $skin->cost + $bestProfit);
+            return $skin->cost + $bestProfit;
         });
 
         return view('funds.skins.index', [
             'skins' => $skins,
             'totalCost' => $totalCost,
-            'totalUuValuation' => $totalUuValuation,
-            'totalBuffValuation' => $totalBuffValuation,
             'totalProfit' => $totalProfit,
             'totalValuation' => $totalValuation,
         ]);

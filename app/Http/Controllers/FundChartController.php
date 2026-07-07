@@ -11,11 +11,32 @@ class FundChartController extends Controller
     {
         $year = (int) ($request->query('year', now()->year));
 
-        $records = auth()->user()->fundMonthlies()
-            ->whereYear('month', $year)
+        $allRecords = auth()->user()->fundMonthlies()
             ->orderBy('month')
-            ->get(['month', 'income', 'expense', 'savings_target', 'savings_actual']);
+            ->get(['month', 'income', 'expense']);
 
-        return response()->json($records);
+        $prevIncome = null;
+        $result = [];
+        foreach ($allRecords as $r) {
+            $income = (float) ($r->income ?? 0);
+            $growth = $prevIncome !== null ? $income - $prevIncome : null;
+            $prevIncome = $income;
+
+            $rYear = \Carbon\Carbon::parse($r->month)->year;
+            if ($rYear != $year) {
+                continue;
+            }
+
+            $result[] = [
+                'month' => $r->month instanceof \Carbon\Carbon
+                    ? $r->month->format('Y-m-d')
+                    : $r->month,
+                'income' => $income,
+                'cumulative' => $income,
+                'growth' => $growth,
+            ];
+        }
+
+        return response()->json($result);
     }
 }

@@ -18,25 +18,27 @@ class FundMonthlyController extends Controller
             ->orderByDesc('month')
             ->paginate(12);
 
+        $growthData = [];
+        foreach ($monthlies as $m) {
+            $prev = $user->fundMonthlies()
+                ->where('month', '<', $m->month)
+                ->orderByDesc('month')
+                ->first();
+            $growthData[$m->id] = $prev
+                ? $m->income - $prev->income
+                : null;
+        }
+
         return view('funds.monthlies.index', [
             'monthlies' => $monthlies,
+            'growthData' => $growthData,
         ]);
     }
 
     public function create(): View
     {
-        $user = auth()->user();
-
-        $previous = $user->fundMonthlies()
-            ->orderByDesc('month')
-            ->first();
-
-        $defaultTarget = $previous ? $previous->savings_target + 2500 : 0;
-
         return view('funds.monthlies.create', [
-            'monthly' => new FundMonthly([
-                'savings_target' => $defaultTarget,
-            ]),
+            'monthly' => new FundMonthly(),
         ]);
     }
 
@@ -44,20 +46,9 @@ class FundMonthlyController extends Controller
     {
         $data = $request->validated();
 
-        if (! isset($data['savings_target'])) {
-            $previous = auth()->user()->fundMonthlies()
-                ->orderByDesc('month')
-                ->first();
-            $data['savings_target'] = $previous ? $previous->savings_target + 2500 : 0;
-        }
-
         auth()->user()->fundMonthlies()->create([
             'month' => $data['month'],
-            'income' => $data['income'],
-            'expense' => $data['expense'],
-            'savings_target' => $data['savings_target'],
-            'savings_actual' => $data['savings_actual'] ?? null,
-            'savings_status' => $data['savings_status'] ?? 'uncompleted',
+            'income' => $data['amount'],
             'note' => $data['note'] ?? null,
         ]);
 
@@ -82,11 +73,7 @@ class FundMonthlyController extends Controller
 
         $monthly->update([
             'month' => $data['month'],
-            'income' => $data['income'],
-            'expense' => $data['expense'],
-            'savings_target' => $data['savings_target'] ?? $monthly->savings_target,
-            'savings_actual' => $data['savings_actual'] ?? null,
-            'savings_status' => $data['savings_status'] ?? 'uncompleted',
+            'income' => $data['amount'],
             'note' => $data['note'] ?? null,
         ]);
 

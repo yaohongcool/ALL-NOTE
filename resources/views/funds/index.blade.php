@@ -9,19 +9,6 @@
 ])
 
 @section('content')
-    @php
-        $currentMonthIncome = $thisMonth->income ?? 0;
-        $currentMonthExpense = $thisMonth->expense ?? 0;
-        $currentMonthSavingsTarget = $thisMonth->savings_target ?? 0;
-        $currentMonthSavingsActual = $thisMonth->savings_actual ?? 0;
-        $savingsPct = $currentMonthSavingsTarget > 0 ? min(100, ($currentMonthSavingsActual / $currentMonthSavingsTarget) * 100) : 0;
-
-        $allBudgets = auth()->user()->fundBudgets()->get();
-        $budgetExpenseTotal = $allBudgets->where('type', 'expense')->sum('monthly_amount');
-        $budgetIncomeTotal = $allBudgets->where('type', 'income')->sum('monthly_amount');
-        $overBudget = $budgetExpenseTotal > 0 && $currentMonthExpense > $budgetExpenseTotal;
-    @endphp
-
     <div class="space-y-6">
         {{-- 统计卡片 --}}
         <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -32,74 +19,27 @@
                 </p>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">本月收入</p>
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">环比增长</p>
+                <p class="mt-3 text-3xl font-bold tracking-tight {{ ($avgGrowth ?? 0) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">
+                    ¥{{ number_format($avgGrowth ?? 0, 2) }}
+                </p>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">近12个月平均月环比增长</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">日均收益</p>
                 <p class="mt-3 text-3xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400">
-                    ¥{{ number_format($currentMonthIncome, 2) }}
+                    ¥{{ number_format($totalDailyProfit ?? 0, 2) }}
                 </p>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">虚拟资产日租金收益总和</p>
             </div>
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">本月支出</p>
-                <p class="mt-3 text-3xl font-bold tracking-tight text-red-600 dark:text-red-400">
-                    ¥{{ number_format($currentMonthExpense, 2) }}
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">月均收益</p>
+                <p class="mt-3 text-3xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400">
+                    ¥{{ number_format($totalMonthlyProfit ?? 0, 2) }}
                 </p>
-            </div>
-            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">本月结余</p>
-                <p class="mt-3 text-3xl font-bold tracking-tight text-blue-600 dark:text-blue-400">
-                    ¥{{ number_format($currentMonthIncome - $currentMonthExpense, 2) }}
-                </p>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">虚拟资产月租金收益总和</p>
             </div>
         </section>
-
-        {{-- 预算对比 + 储蓄进度 --}}
-        @if($budgetExpenseTotal > 0 || $currentMonthSavingsTarget > 0)
-        <section class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            @if($budgetExpenseTotal > 0)
-            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <div class="flex items-center justify-between">
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">本月预算 vs 实际</p>
-                    <a href="{{ route('funds.budgets.index') }}" class="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400">预算明细</a>
-                </div>
-                <div class="mt-3 space-y-2">
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-slate-600 dark:text-slate-300">预算支出</span>
-                        <span class="font-medium text-slate-900 dark:text-slate-100">¥{{ number_format($budgetExpenseTotal, 2) }}</span>
-                    </div>
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-slate-600 dark:text-slate-300">实际支出</span>
-                        <span class="font-medium {{ $overBudget ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400' }}">¥{{ number_format($currentMonthExpense, 2) }}</span>
-                    </div>
-                    @if($overBudget)
-                    <p class="text-xs text-red-500">超支 ¥{{ number_format($currentMonthExpense - $budgetExpenseTotal, 2) }}</p>
-                    @endif
-                </div>
-            </div>
-            @endif
-
-            @if($currentMonthSavingsTarget > 0)
-            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <div class="flex items-center justify-between">
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">本月储蓄进度</p>
-                    <a href="{{ route('funds.monthlies.index') }}" class="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400">查看月度</a>
-                </div>
-                <div class="mt-3">
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-slate-600 dark:text-slate-300">目标</span>
-                        <span class="font-medium text-slate-900 dark:text-slate-100">¥{{ number_format($currentMonthSavingsTarget, 2) }}</span>
-                    </div>
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-slate-600 dark:text-slate-300">已存</span>
-                        <span class="font-medium {{ $currentMonthSavingsActual >= $currentMonthSavingsTarget ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400' }}">¥{{ number_format($currentMonthSavingsActual, 2) }}</span>
-                    </div>
-                    <div class="mt-2 h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800">
-                        <div class="h-full rounded-full {{ $savingsPct >= 100 ? 'bg-emerald-500' : 'bg-blue-500' }}" style="width: {{ $savingsPct }}%;"></div>
-                    </div>
-                    <p class="mt-1 text-right text-xs text-slate-400">{{ number_format($savingsPct, 1) }}%</p>
-                </div>
-            </div>
-            @endif
-        </section>
-        @endif
 
         {{-- 三列底栏 --}}
         <section class="grid grid-cols-1 gap-6 lg:grid-cols-3">

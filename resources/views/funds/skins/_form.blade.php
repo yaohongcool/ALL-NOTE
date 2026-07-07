@@ -2,6 +2,10 @@
     method="POST"
     action="{{ $action }}"
     class="mt-6 space-y-5"
+    x-data="{
+        uuFee: {{ ($skin->uu_fee_rate ?? 0.02) * 100 }},
+        buffFee: {{ ($skin->buff_fee_rate ?? 0.025) * 100 }}
+    }"
 >
     @csrf
     @if ($method !== 'POST')
@@ -82,16 +86,16 @@
 
         <div>
             <label for="uu_fee_rate" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
-                UU手续费率
+                UU手续费率 (%)
             </label>
+            <input type="hidden" name="uu_fee_rate" :value="uuFee / 100">
             <input
-                id="uu_fee_rate"
-                name="uu_fee_rate"
+                id="uu_fee_rate_display"
                 type="number"
-                step="0.001"
-                value="{{ old('uu_fee_rate', $skin->uu_fee_rate) }}"
+                step="0.1"
+                x-model.number="uuFee"
                 class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
-                placeholder="0.02"
+                placeholder="2.0"
             >
             @error('uu_fee_rate')
                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -118,16 +122,16 @@
 
         <div>
             <label for="buff_fee_rate" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
-                Buff手续费率
+                Buff手续费率 (%)
             </label>
+            <input type="hidden" name="buff_fee_rate" :value="buffFee / 100">
             <input
-                id="buff_fee_rate"
-                name="buff_fee_rate"
+                id="buff_fee_rate_display"
                 type="number"
-                step="0.001"
-                value="{{ old('buff_fee_rate', $skin->buff_fee_rate) }}"
+                step="0.1"
+                x-model.number="buffFee"
                 class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
-                placeholder="0.025"
+                placeholder="2.5"
             >
             @error('buff_fee_rate')
                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
