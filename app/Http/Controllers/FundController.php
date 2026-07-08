@@ -73,7 +73,7 @@ class FundController extends Controller
         $years = $user->fundMonthlies()
             ->selectRaw('YEAR(month) as year')
             ->distinct()
-            ->orderBy('year')
+            ->orderByDesc('year')
             ->pluck('year');
 
         return view('funds.statistics', compact('years'));
