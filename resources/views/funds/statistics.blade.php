@@ -16,6 +16,7 @@
         <select id="year-select"
             class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
         >
+            <option value="all" selected>最近12个月</option>
             @foreach($years as $y)
                 <option value="{{ $y }}">{{ $y }} 年</option>
             @endforeach

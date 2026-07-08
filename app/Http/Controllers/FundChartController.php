@@ -9,23 +9,26 @@ class FundChartController extends Controller
 {
     public function chartData(Request $request): JsonResponse
     {
-        $year = (int) ($request->query('year', now()->year));
+        $yearParam = $request->query('year', 'all');
 
         $allRecords = auth()->user()->fundMonthlies()
             ->orderBy('month')
             ->get(['month', 'income', 'expense']);
 
+        // If "all", take last 12 months; otherwise filter by year
+        if ($yearParam === 'all') {
+            $records = $allRecords->take(-12);
+        } else {
+            $year = (int) $yearParam;
+            $records = $allRecords->filter(fn ($r) => \Carbon\Carbon::parse($r->month)->year === $year)->values();
+        }
+
         $prevIncome = null;
         $result = [];
-        foreach ($allRecords as $r) {
+        foreach ($records as $r) {
             $income = (float) ($r->income ?? 0);
             $growth = $prevIncome !== null ? $income - $prevIncome : null;
             $prevIncome = $income;
-
-            $rYear = \Carbon\Carbon::parse($r->month)->year;
-            if ($rYear != $year) {
-                continue;
-            }
 
             $result[] = [
                 'month' => $r->month instanceof \Carbon\Carbon

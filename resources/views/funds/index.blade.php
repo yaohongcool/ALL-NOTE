@@ -42,7 +42,7 @@
         </section>
 
         {{-- 三列底栏 --}}
-        <section class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <section class="grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <div class="mb-4 flex items-center justify-between">
                     <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">账户列表</h3>
@@ -51,7 +51,7 @@
 
                 @if(isset($accounts) && $accounts->isNotEmpty())
                     <div class="space-y-2">
-                        @foreach($accounts->take(5) as $account)
+                        @foreach($accounts as $account)
                             @php
                                 $typeColors = [
                                     'cash' => 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40',
@@ -106,15 +106,15 @@
                 <div class="space-y-3">
                     @if(isset($skins) && $skins->isNotEmpty())
                     <div class="grid grid-cols-3 gap-3">
-                        <div class="rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
+                        <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
                             <p class="text-xs text-slate-500 dark:text-slate-400">虚拟资产数量</p>
                             <p class="mt-1 text-lg font-bold text-slate-900 dark:text-slate-100">{{ $skins->count() }}</p>
                         </div>
-                        <div class="rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
+                        <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
                             <p class="text-xs text-slate-500 dark:text-slate-400">总估值</p>
                             <p class="mt-1 text-lg font-bold text-purple-600 dark:text-purple-400">¥{{ number_format($totalSkinValuation ?? 0, 2) }}</p>
                         </div>
-                        <div class="rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
+                        <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
                             <p class="text-xs text-slate-500 dark:text-slate-400">累计收益</p>
                             <p class="mt-1 text-lg font-bold text-emerald-600 dark:text-emerald-400">¥{{ number_format($totalCumulativeEarnings ?? 0, 2) }}</p>
                         </div>
@@ -133,7 +133,7 @@
 
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <div class="mb-4">
-                    <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">快捷入口</h3>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">统计记录</h3>
                 </div>
                 <div class="space-y-3">
                     <a href="{{ route('funds.budgets.index') }}" class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
