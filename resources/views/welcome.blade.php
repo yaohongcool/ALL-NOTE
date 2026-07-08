@@ -25,7 +25,7 @@
                         ALL NOTE
                     </h1>
                     <p class="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
-                        一个简洁、安全，面向个人的存储账号密码、期限备忘、事件记录的统一管理工具
+                        一个简洁、安全，面向个人的资金记录、账密存储、期限备忘、事件记录的统一管理工具
                     </p>
 
                     <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
