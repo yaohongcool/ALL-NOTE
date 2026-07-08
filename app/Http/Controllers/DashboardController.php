@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Asset;
 use App\Models\Document;
+use App\Services\FundStatisticsService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 
 class DashboardController extends Controller
 {
+    public function __construct(
+        protected FundStatisticsService $stats
+    ) {}
+
     public function index(): View
     {
         $user = auth()->user();
@@ -39,33 +44,12 @@ class DashboardController extends Controller
 
         // 资金统计
         $skins = $user->fundSkins()->get();
-        $totalSkinValuation = $skins->sum(function ($s) {
-            $uuProfit = ($s->uu_price * (1 - $s->uu_fee_rate)) - $s->cost;
-            $buffProfit = ($s->buff_price * (1 - $s->buff_fee_rate)) - $s->cost;
-            return $s->cost + max($uuProfit, $buffProfit);
-        });
+        $totalSkinValuation = $this->stats->totalValuation($skins);
 
         $recentMonthlies = $user->fundMonthlies()
             ->orderByDesc('month')
             ->limit(13)
-            ->get(['id', 'income', 'month'])
-            ->sortBy('month')
-            ->values();
-
-        $growthSum = 0;
-        $growthCount = 0;
-        for ($i = 1; $i < $recentMonthlies->count(); $i++) {
-            $growthSum += (float) $recentMonthlies[$i]->income - (float) $recentMonthlies[$i - 1]->income;
-            $growthCount++;
-        }
-
-        $totalDailyProfit = 0;
-        $totalMonthlyProfit = 0;
-        foreach ($skins as $s) {
-            $daily = (float) ($s->daily_rental ?? 0) * 0.8 * 0.5 * 0.99;
-            $totalDailyProfit += $daily;
-            $totalMonthlyProfit += $daily * 30.5;
-        }
+            ->get(['id', 'income', 'month']);
 
         return view('dashboard', [
             'stats' => [
@@ -75,9 +59,9 @@ class DashboardController extends Controller
                 'events_count' => $user->events()->count(),
             ],
             'fundTotalAssets' => $user->fundAccounts()->sum('balance') + $totalSkinValuation,
-            'fundAvgGrowth' => $growthCount > 0 ? $growthSum / $growthCount : 0,
-            'fundDailyProfit' => $totalDailyProfit,
-            'fundMonthlyProfit' => $totalMonthlyProfit,
+            'fundAvgGrowth' => $this->stats->avgMonthlyGrowth($recentMonthlies),
+            'fundDailyProfit' => $this->stats->totalDailyProfit($skins),
+            'fundMonthlyProfit' => $this->stats->totalMonthlyProfit($skins),
             'assetsOverview' => $assetsOverview,
             'reminders' => $reminders,
         ]);

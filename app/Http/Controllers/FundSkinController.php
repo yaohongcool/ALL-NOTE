@@ -5,48 +5,35 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Fund\StoreFundSkinRequest;
 use App\Http\Requests\Fund\UpdateFundSkinRequest;
 use App\Models\FundSkin;
+use App\Services\FundStatisticsService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
 class FundSkinController extends Controller
 {
+    public function __construct(
+        protected FundStatisticsService $stats
+    ) {}
+
     public function index(): View
     {
         $user = auth()->user();
 
+        $skinsCollection = $user->fundSkins()->get();
         $skins = $user->fundSkins()
             ->orderBy('name')
             ->paginate(10);
 
-        $totalCost = $skins->sum('cost');
-        $totalProfit = $skins->sum(function (FundSkin $skin) {
-            $uuProfit = ($skin->uu_price * (1 - $skin->uu_fee_rate)) - $skin->cost;
-            $buffProfit = ($skin->buff_price * (1 - $skin->buff_fee_rate)) - $skin->cost;
-            return max($uuProfit, $buffProfit);
-        });
-
-        $totalValuation = $skins->sum(function (FundSkin $skin) {
-            $uuProfit = ($skin->uu_price * (1 - $skin->uu_fee_rate)) - $skin->cost;
-            $buffProfit = ($skin->buff_price * (1 - $skin->buff_fee_rate)) - $skin->cost;
-            $bestProfit = max($uuProfit, $buffProfit);
-            return $skin->cost + $bestProfit;
-        });
-
-        $totalDailyProfit = 0;
-        $totalMonthlyProfit = 0;
-        foreach ($skins as $s) {
-            $daily = (float) ($s->daily_rental ?? 0) * 0.8 * 0.5 * 0.99;
-            $totalDailyProfit += $daily;
-            $totalMonthlyProfit += $daily * 30.5;
-        }
+        // 把集合传给 paginator 以便计算合计
+        $allSkins = $skinsCollection;
 
         return view('funds.skins.index', [
             'skins' => $skins,
-            'totalCost' => $totalCost,
-            'totalProfit' => $totalProfit,
-            'totalValuation' => $totalValuation,
-            'totalDailyProfit' => $totalDailyProfit,
-            'totalMonthlyProfit' => $totalMonthlyProfit,
+            'totalCost' => $this->stats->totalCost($allSkins),
+            'totalProfit' => $this->stats->totalBestProfit($allSkins),
+            'totalValuation' => $this->stats->totalValuation($allSkins),
+            'totalDailyProfit' => $this->stats->totalDailyProfit($allSkins),
+            'totalMonthlyProfit' => $this->stats->totalMonthlyProfit($allSkins),
         ]);
     }
 
@@ -97,9 +84,9 @@ class FundSkinController extends Controller
             'purchased_at' => $data['purchased_at'] ?? null,
             'cost' => $data['cost'],
             'uu_price' => $data['uu_price'] ?? null,
-            'uu_fee_rate' => $data['uu_fee_rate'] ?? 0.02,
+            'uu_fee_rate' => $data['uu_fee_rate'] ?? $skin->uu_fee_rate,
             'buff_price' => $data['buff_price'] ?? null,
-            'buff_fee_rate' => $data['buff_fee_rate'] ?? 0.025,
+            'buff_fee_rate' => $data['buff_fee_rate'] ?? $skin->buff_fee_rate,
             'daily_rental' => $data['daily_rental'] ?? null,
             'note' => $data['note'] ?? null,
         ]);

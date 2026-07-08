@@ -44,9 +44,8 @@
         {{-- 三列底栏 --}}
         <section class="grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <div class="mb-4 flex items-center justify-between">
+                <div class="mb-4">
                     <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">账户列表</h3>
-                    <a href="{{ route('funds.accounts.index') }}" class="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400">查看全部</a>
                 </div>
 
                 @if(isset($accounts) && $accounts->isNotEmpty())
@@ -98,9 +97,8 @@
             </div>
 
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <div class="mb-4 flex items-center justify-between">
+                <div class="mb-4">
                     <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">虚拟资产</h3>
-                    <a href="{{ route('funds.skins.index') }}" class="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400">查看全部</a>
                 </div>
 
                 <div class="space-y-3">
