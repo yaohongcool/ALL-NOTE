@@ -16,7 +16,9 @@
     <div x-show="!loading" class="flex flex-wrap gap-4">
         <template x-for="skin in skins" :key="skin.id">
             <div class="w-56 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <p class="text-sm font-medium text-purple-600 dark:text-purple-400" x-text="skin.name + ' 租金累计收入'"></p>
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">
+                    <span class="text-purple-600 dark:text-purple-400" x-text="skin.name"></span> 租金累计收入
+                </p>
                 <p class="mt-3 text-3xl font-bold tracking-tight text-emerald-600 dark:text-emerald-400" x-text="'¥' + cumulative(skin.id).toFixed(2)"></p>
                 <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">去除手续实际累计收入</p>
             </div>

@@ -20,6 +20,30 @@
             </a>
         </div>
 
+        {{-- 合计卡片 --}}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-5">
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">合计购入价</p>
+                <p class="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">¥{{ number_format($totalCost ?? 0, 2) }}</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">合计择优收益</p>
+                <p class="mt-2 text-2xl font-bold {{ ($totalProfit ?? 0) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">¥{{ number_format($totalProfit ?? 0, 2) }}</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">合计估值</p>
+                <p class="mt-2 text-2xl font-bold text-purple-600 dark:text-purple-400">¥{{ number_format($totalValuation ?? 0, 2) }}</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">合计日均收益</p>
+                <p class="mt-2 text-2xl font-bold {{ ($totalDailyProfit ?? 0) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">¥{{ number_format($totalDailyProfit ?? 0, 2) }}</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">合计月均收益</p>
+                <p class="mt-2 text-2xl font-bold {{ ($totalMonthlyProfit ?? 0) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">¥{{ number_format($totalMonthlyProfit ?? 0, 2) }}</p>
+            </div>
+        </div>
+
         <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div class="responsive-table-wrap overflow-x-auto">
                 <table class="responsive-table min-w-full divide-y divide-slate-200 dark:divide-slate-800">
@@ -114,21 +138,5 @@
                 </div>
             @endif
         </section>
-
-        {{-- 合计卡片 --}}
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">合计购入价</p>
-                <p class="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">¥{{ number_format($totalCost ?? 0, 2) }}</p>
-            </div>
-            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">合计估值</p>
-                <p class="mt-2 text-2xl font-bold text-purple-600 dark:text-purple-400">¥{{ number_format($totalValuation ?? 0, 2) }}</p>
-            </div>
-            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">合计择优收益</p>
-                <p class="mt-2 text-2xl font-bold {{ ($totalProfit ?? 0) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">¥{{ number_format($totalProfit ?? 0, 2) }}</p>
-            </div>
-        </div>
     </div>
 @endsection

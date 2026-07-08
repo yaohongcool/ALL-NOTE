@@ -32,11 +32,21 @@ class FundSkinController extends Controller
             return $skin->cost + $bestProfit;
         });
 
+        $totalDailyProfit = 0;
+        $totalMonthlyProfit = 0;
+        foreach ($skins as $s) {
+            $daily = (float) ($s->daily_rental ?? 0) * 0.8 * 0.5 * 0.99;
+            $totalDailyProfit += $daily;
+            $totalMonthlyProfit += $daily * 30.5;
+        }
+
         return view('funds.skins.index', [
             'skins' => $skins,
             'totalCost' => $totalCost,
             'totalProfit' => $totalProfit,
             'totalValuation' => $totalValuation,
+            'totalDailyProfit' => $totalDailyProfit,
+            'totalMonthlyProfit' => $totalMonthlyProfit,
         ]);
     }
 
