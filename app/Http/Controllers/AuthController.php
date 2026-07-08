@@ -72,21 +72,17 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        $user = User::query()
-            ->where('username', $data['username'])
-            ->first();
+        $user = auth()->user();
 
-        if (! $user || ! Hash::check($data['old_password'], $user->password)) {
+        if (! Hash::check($data['old_password'], $user->password)) {
             return back()
-                ->withInput($request->only('username'))
                 ->withErrors([
-                    'old_password' => '用户名或旧密码错误，请重新输入。',
+                    'old_password' => '旧密码错误，请重新输入。',
                 ]);
         }
 
         if (Hash::check($data['password'], $user->password)) {
             return back()
-                ->withInput($request->only('username'))
                 ->withErrors([
                     'password' => '新密码不能与旧密码相同。',
                 ]);

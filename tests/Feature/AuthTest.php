@@ -42,7 +42,7 @@ class AuthTest extends TestCase
 
     public function test_pages_render_apple_touch_icon_link(): void
     {
-        foreach ([route('home'), route('login'), route('register'), route('password.change')] as $route) {
+        foreach ([route('home'), route('login'), route('register')] as $route) {
             $this->get($route)
                 ->assertOk()
                 ->assertSee('rel="apple-touch-icon"', false)
@@ -55,6 +55,11 @@ class AuthTest extends TestCase
         ]);
 
         $this->actingAs($user)->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('rel="apple-touch-icon"', false)
+            ->assertSee('apple-touch-icon.png', false);
+
+        $this->actingAs($user)->get(route('password.change'))
             ->assertOk()
             ->assertSee('rel="apple-touch-icon"', false)
             ->assertSee('apple-touch-icon.png', false);

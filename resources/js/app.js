@@ -820,3 +820,13 @@ window.passwordEditorField = function (revealUrl) {
 };
 
 Alpine.start();
+
+document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-toggle-password]');
+    if (!btn) return;
+    var input = document.getElementById(btn.dataset.target);
+    if (!input) return;
+    var show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.textContent = show ? '隐藏' : '显示';
+});

@@ -30,10 +30,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])
         ->middleware('throttle:5,1')
         ->name('login.attempt');
-    Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('password.change');
-    Route::post('/change-password', [AuthController::class, 'changePassword'])
-        ->middleware('throttle:5,1')
-        ->name('password.change.update');
 
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])
@@ -44,6 +40,11 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('password.change');
+    Route::post('/change-password', [AuthController::class, 'changePassword'])
+        ->middleware('throttle:5,1')
+        ->name('password.change.update');
 
     Route::get('/passwords', [PasswordController::class, 'index'])->name('passwords.index');
     Route::get('/passwords/create', [PasswordController::class, 'create'])->name('passwords.create');

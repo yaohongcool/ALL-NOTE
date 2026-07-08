@@ -147,7 +147,11 @@
             }
             e.target.dataset.submitting = '1';
             var btn = e.target.querySelector('button[type="submit"]');
-            if (btn) btn.disabled = true;
+            if (btn) {
+                btn.disabled = true;
+                btn.dataset.originalText = btn.textContent;
+                btn.textContent = '处理中...';
+            }
         });
     </script>
     @stack('scripts')

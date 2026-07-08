@@ -7,6 +7,9 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script>
+        (function(){var t=localStorage.getItem('theme'),p=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(p)document.documentElement.classList.add('dark');})();
+    </script>
 </head>
 <body class="bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
     <div class="flex min-h-screen flex-col">
@@ -116,18 +119,5 @@
 
         @include('partials.footer')
     </div>
-
-    <script>
-        document.querySelectorAll('[data-toggle-password]').forEach((button) => {
-            button.addEventListener('click', () => {
-                const input = document.getElementById(button.dataset.target);
-                if (!input) return;
-
-                const show = input.type === 'password';
-                input.type = show ? 'text' : 'password';
-                button.textContent = show ? '隐藏' : '显示';
-            });
-        });
-    </script>
 </body>
 </html>
