@@ -106,26 +106,32 @@
                 <div class="space-y-3">
                     @if(isset($skins) && $skins->isNotEmpty())
                     <div class="grid grid-cols-3 gap-3">
-                        <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
+                        <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-2 dark:border-slate-700 dark:bg-slate-800/60">
                             <p class="text-xs text-slate-500 dark:text-slate-400">虚拟资产数量</p>
                             <p class="mt-1 text-lg font-bold text-slate-900 dark:text-slate-100">{{ $skins->count() }}</p>
                         </div>
-                        <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
+                        <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-2 dark:border-slate-700 dark:bg-slate-800/60">
                             <p class="text-xs text-slate-500 dark:text-slate-400">总估值</p>
                             <p class="mt-1 text-lg font-bold text-purple-600 dark:text-purple-400">¥{{ number_format($totalSkinValuation ?? 0, 2) }}</p>
                         </div>
-                        <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
+                        <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-2 dark:border-slate-700 dark:bg-slate-800/60">
                             <p class="text-xs text-slate-500 dark:text-slate-400">累计收益</p>
                             <p class="mt-1 text-lg font-bold text-emerald-600 dark:text-emerald-400">¥{{ number_format($totalCumulativeEarnings ?? 0, 2) }}</p>
                         </div>
                     </div>
                     @endif
                     <a href="{{ route('funds.skins.index') }}" class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
-                        <span class="text-sm font-medium text-slate-700 dark:text-slate-200">虚拟资产估值一览表</span>
+                        <div>
+                            <p class="text-sm font-medium text-slate-700 dark:text-slate-200">虚拟资产估值一览表</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">成本、估值与收益概览</p>
+                        </div>
                         <span class="text-slate-400">&rarr;</span>
                     </a>
                     <a href="{{ route('funds.historical-earnings') }}" class="flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
-                        <span class="text-sm font-medium text-slate-700 dark:text-slate-200">累计收益</span>
+                        <div>
+                            <p class="text-sm font-medium text-slate-700 dark:text-slate-200">累计收益</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">各期收益登记汇总</p>
+                        </div>
                         <span class="text-slate-400">&rarr;</span>
                     </a>
                 </div>

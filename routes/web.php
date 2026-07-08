@@ -8,6 +8,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventFileController;
 use App\Http\Controllers\EventRecordController;
 use App\Http\Controllers\EventTagController;
+use App\Http\Controllers\FallbackController;
 use App\Http\Controllers\FundController;
 use App\Http\Controllers\FundAccountController;
 use App\Http\Controllers\FundBudgetController;
@@ -102,6 +103,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('funds/skins/{skin}/earnings', FundSkinEarningController::class)->names(['index' => 'funds.skin-earnings.index', 'create' => 'funds.skin-earnings.create', 'store' => 'funds.skin-earnings.store', 'edit' => 'funds.skin-earnings.edit', 'update' => 'funds.skin-earnings.update', 'destroy' => 'funds.skin-earnings.destroy'])->except(['show']);
 });
 
-Route::fallback(function () {
-    return redirect()->route(auth()->check() ? 'dashboard' : 'login');
-});
+Route::fallback([FallbackController::class, '__invoke']);
