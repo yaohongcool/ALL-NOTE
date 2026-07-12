@@ -11,6 +11,8 @@ use App\Http\Controllers\EventTagController;
 use App\Http\Controllers\FallbackController;
 use App\Http\Controllers\FundController;
 use App\Http\Controllers\FundAccountController;
+use App\Http\Controllers\MasterPasswordController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\FundBudgetController;
 use App\Http\Controllers\FundChartController;
 use App\Http\Controllers\FundEarningPeriodController;
@@ -35,11 +37,34 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])
         ->middleware('throttle:5,1')
         ->name('register.store');
+
+    Route::get('/forgot-password', [PasswordResetController::class, 'showForgot'])
+        ->middleware('throttle:5,1')
+        ->name('password.forgot');
+    Route::post('/forgot-password', [PasswordResetController::class, 'verify'])
+        ->middleware('throttle:5,1')
+        ->name('password.forgot.verify');
+
+    Route::get('/reset-password', [PasswordResetController::class, 'showReset'])
+        ->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'reset'])
+        ->middleware('throttle:5,1')
+        ->name('password.reset.update');
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/master-password/verify', [MasterPasswordController::class, 'showVerify'])->name('master-password.verify');
+    Route::post('/master-password/verify', [MasterPasswordController::class, 'verify'])
+        ->middleware('throttle:5,1')
+        ->name('master-password.verify.attempt');
+
+    Route::get('/master-password/setup', [MasterPasswordController::class, 'showSetup'])->name('master-password.setup');
+    Route::post('/master-password/setup', [MasterPasswordController::class, 'setup'])
+        ->middleware('throttle:5,1')
+        ->name('master-password.setup.store');
 
     Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('password.change');
     Route::post('/change-password', [AuthController::class, 'changePassword'])

@@ -130,6 +130,61 @@
                         ></p>
                     </div>
 
+                    <div class="border-t border-slate-200 pt-5 dark:border-slate-700">
+                        <p class="mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200">设置主密码</p>
+                        <p class="mb-4 text-xs text-slate-500 dark:text-slate-400">
+                            主密码用于加密密码记录，与登录密码不同。请妥善保管，丢失后将无法读取已存储的密码。
+                        </p>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label for="master_password" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
+                                    主密码
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        id="master_password"
+                                        name="master_password"
+                                        type="password"
+                                        class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 pr-16 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
+                                        placeholder="请输入主密码"
+                                    >
+                                    <button
+                                        type="button"
+                                        data-toggle-password
+                                        data-target="master_password"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-slate-500 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                                    >
+                                        显示
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="master_password_confirmation" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
+                                    确认主密码
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        id="master_password_confirmation"
+                                        name="master_password_confirmation"
+                                        type="password"
+                                        class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 pr-16 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-950"
+                                        placeholder="请再次输入主密码"
+                                    >
+                                    <button
+                                        type="button"
+                                        data-toggle-password
+                                        data-target="master_password_confirmation"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-slate-500 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                                    >
+                                        显示
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <button
                         type="submit"
                         class="inline-flex w-full items-center justify-center rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"

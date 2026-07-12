@@ -681,7 +681,11 @@ window.passwordRow = function (id, revealUrl) {
         maskedText: '••••••••',
         loading: false,
 
-        async fetchPlainPassword() {
+        promptLoginPassword() {
+            return prompt('请输入登录密码以确认身份：');
+        },
+
+        async fetchPlainPassword(loginPassword) {
             const response = await fetch(this.revealUrl, {
                 method: 'POST',
                 headers: {
@@ -689,7 +693,7 @@ window.passwordRow = function (id, revealUrl) {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({})
+                body: JSON.stringify({ password: loginPassword })
             });
 
             const data = await response.json();
@@ -706,10 +710,15 @@ window.passwordRow = function (id, revealUrl) {
                 return;
             }
 
+            const loginPassword = this.promptLoginPassword();
+            if (!loginPassword) {
+                return;
+            }
+
             this.loading = true;
 
             try {
-                const password = await this.fetchPlainPassword();
+                const password = await this.fetchPlainPassword(loginPassword);
                 this.plainPassword = password;
                 this.revealed = true;
                 window.pushToast('密码已显示。', 'success');
@@ -725,12 +734,17 @@ window.passwordRow = function (id, revealUrl) {
                 return;
             }
 
+            const loginPassword = this.promptLoginPassword();
+            if (!loginPassword) {
+                return;
+            }
+
             this.loading = true;
 
             try {
                 const password = this.revealed && this.plainPassword
                     ? this.plainPassword
-                    : await this.fetchPlainPassword();
+                    : await this.fetchPlainPassword(loginPassword);
 
                 await navigator.clipboard.writeText(password);
                 window.pushToast('密码已复制到剪贴板。', 'success');

@@ -14,10 +14,12 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'password',
+        'master_password_hash',
     ];
 
     protected $hidden = [
         'password',
+        'master_password_hash',
         'remember_token',
     ];
 
@@ -25,6 +27,7 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'master_password_set_at' => 'datetime',
         ];
     }
 
