@@ -6,7 +6,6 @@ use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
-use App\Services\PasswordCipherService;
 use App\Services\UserBootstrapService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -107,14 +106,10 @@ class AuthController extends Controller
         $data = $request->validated();
 
         $user = DB::transaction(function () use ($data) {
-            $user = User::create([
+            $user = \App\Models\User::create([
                 'username' => $data['username'],
                 'password' => $data['password'],
             ]);
-
-            $user->master_password_hash = Hash::make($data['master_password']);
-            $user->master_password_set_at = now();
-            $user->save();
 
             $this->userBootstrapService->bootstrap($user);
 
@@ -124,16 +119,12 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        app(PasswordCipherService::class)->cacheMasterKeyInSession($data['master_password']);
-
         return redirect()->route('dashboard')
             ->with('success', '注册成功，已自动登录，并已为你初始化数据。');
     }
 
     public function logout(): RedirectResponse
     {
-        app(PasswordCipherService::class)->clearMasterKeyFromSession();
-
         Auth::logout();
 
         request()->session()->invalidate();

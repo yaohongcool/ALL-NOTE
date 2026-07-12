@@ -8,17 +8,13 @@ use Tests\TestCase;
 
 class PasswordCipherServiceTest extends TestCase
 {
-    private string $masterPassword = 'TestMaster@123';
-
     public function test_encrypt_and_decrypt_roundtrip(): void
     {
         $service = $this->app->make(PasswordCipherService::class);
         $plaintext = 'MySecret@123';
 
-        $encrypted = $service->encrypt($plaintext, $this->masterPassword);
-        $this->assertStringStartsWith('v2|', $encrypted);
-
-        $decrypted = $service->decrypt($encrypted, $this->masterPassword);
+        $encrypted = $service->encrypt($plaintext);
+        $decrypted = $service->decrypt($encrypted);
 
         $this->assertSame($plaintext, $decrypted);
     }
@@ -27,21 +23,24 @@ class PasswordCipherServiceTest extends TestCase
     {
         $service = $this->app->make(PasswordCipherService::class);
 
-        $result = $service->decrypt('', $this->masterPassword);
+        $result = $service->decrypt('');
 
         $this->assertSame('', $result);
     }
 
-    public function test_decrypt_with_wrong_master_password_fails(): void
+    public function test_decrypt_deleted_app_key_throws_and_logs(): void
     {
         $service = $this->app->make(PasswordCipherService::class);
 
-        $encrypted = $service->encrypt('sensitive-data', $this->masterPassword);
+        $cipher = config('app.cipher');
+        $keyLength = ($cipher === 'AES-128-CBC' || $cipher === 'AES-128-GCM') ? 16 : 32;
+        $otherEncrypter = new \Illuminate\Encryption\Encrypter(random_bytes($keyLength), $cipher);
+        $ciphertext = $otherEncrypter->encryptString('sensitive-data');
 
         Log::spy();
 
         try {
-            $service->decrypt($encrypted, 'WrongMaster@456');
+            $service->decrypt($ciphertext);
             $this->fail('Expected exception was not thrown.');
         } catch (\Throwable $e) {
             Log::shouldHaveReceived('warning')
@@ -58,12 +57,15 @@ class PasswordCipherServiceTest extends TestCase
         $service = $this->app->make(PasswordCipherService::class);
         $passwordId = 42;
 
-        $encrypted = $service->encrypt('some-data', $this->masterPassword);
+        $cipher = config('app.cipher');
+        $keyLength = ($cipher === 'AES-128-CBC' || $cipher === 'AES-128-GCM') ? 16 : 32;
+        $otherEncrypter = new \Illuminate\Encryption\Encrypter(random_bytes($keyLength), $cipher);
+        $ciphertext = $otherEncrypter->encryptString('some-data');
 
         Log::spy();
 
         try {
-            $service->decrypt($encrypted, 'WrongMaster@456', $passwordId);
+            $service->decrypt($ciphertext, $passwordId);
             $this->fail('Expected exception was not thrown.');
         } catch (\Throwable $e) {
             Log::shouldHaveReceived('warning')
@@ -73,34 +75,5 @@ class PasswordCipherServiceTest extends TestCase
                         && ($context['password_id'] ?? null) === $passwordId;
                 });
         }
-    }
-
-    public function test_encrypt_unique_per_call(): void
-    {
-        $service = $this->app->make(PasswordCipherService::class);
-        $plaintext = 'same-data';
-
-        $e1 = $service->encrypt($plaintext, $this->masterPassword);
-        $e2 = $service->encrypt($plaintext, $this->masterPassword);
-
-        $this->assertNotSame($e1, $e2);
-
-        $this->assertSame($plaintext, $service->decrypt($e1, $this->masterPassword));
-        $this->assertSame($plaintext, $service->decrypt($e2, $this->masterPassword));
-    }
-
-    public function test_session_roundtrip(): void
-    {
-        $service = $this->app->make(PasswordCipherService::class);
-
-        $service->cacheMasterKeyInSession($this->masterPassword);
-
-        $this->assertTrue($service->hasMasterKeyInSession());
-
-        $retrieved = $service->getMasterPasswordFromSession();
-        $this->assertSame($this->masterPassword, $retrieved);
-
-        $service->clearMasterKeyFromSession();
-        $this->assertFalse($service->hasMasterKeyInSession());
     }
 }

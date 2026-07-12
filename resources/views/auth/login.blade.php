@@ -93,15 +93,9 @@
                             >
                             <span>记住登录状态</span>
                         </label>
-                        <div class="flex items-center gap-3">
-                            <a href="{{ route('password.forgot') }}" class="text-sm font-medium text-amber-600 transition hover:text-amber-700 dark:text-amber-400">
-                                忘记密码
-                            </a>
-                            <span class="text-slate-300 dark:text-slate-600">|</span>
-                            <a href="{{ route('password.change') }}" class="text-sm font-medium text-blue-600 transition hover:text-blue-700">
-                                更改密码
-                            </a>
-                        </div>
+                        <a href="{{ route('password.change') }}" class="text-sm font-medium text-blue-600 transition hover:text-blue-700">
+                            更改密码
+                        </a>
                     </div>
 
                     <button

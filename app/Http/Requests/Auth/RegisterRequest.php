@@ -17,7 +17,6 @@ class RegisterRequest extends FormRequest
         return [
             'username' => ['required', 'string', 'min:2', 'max:50', 'regex:/^[\p{L}\p{N}_-]+$/u', 'unique:users,username'],
             'password' => ['required', 'string', 'confirmed', new StrongPassword()],
-            'master_password' => ['required', 'string', 'confirmed', new StrongPassword()],
         ];
     }
 
@@ -31,8 +30,6 @@ class RegisterRequest extends FormRequest
             'username.unique' => '该用户名已被占用，请更换。',
             'password.required' => '请输入密码。',
             'password.confirmed' => '两次输入的密码不一致。',
-            'master_password.required' => '请输入主密码。',
-            'master_password.confirmed' => '两次输入的主密码不一致。',
         ];
     }
 }
