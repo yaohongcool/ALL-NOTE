@@ -2,7 +2,9 @@
 
 ALL-NOTE 是一个面向个人或小团队使用的统一记录管理系统，用于集中管理密码、IT/资产、期限备忘和事件处理记录。
 
-系统默认要求用户登录后使用，不提供访客访问和管理员后台。每个用户维护自己的数据和标签。
+<img width="1912" height="914" alt="image" src="https://github.com/user-attachments/assets/aac4b78b-8bd2-4b7f-84bd-d51cdb68369d" />
+
+
 
 ## 功能概览
 
